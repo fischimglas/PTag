@@ -244,10 +244,10 @@ class Element implements SerializeableInterface
                 }
                 $value = implode(';', $valueItems);
             } elseif ($value instanceof SerializeableInterface) {
-                $value = htmlentities($value->serialize());
+                $value = $value->serialize();
             }
 
-            $result[] = $value === null ? $key : $key . '="' . $value . '"';
+            $result[] = $value === null ? $key : $key . '="' . htmlentities($value) . '"';
         }
 
         return implode(' ', $result);
@@ -261,10 +261,10 @@ class Element implements SerializeableInterface
             if (is_array($value)) {
                 $value = $this->serializeStyle($value);
             } elseif ($value instanceof SerializeableInterface) {
-                $value = htmlentities($value->serialize());
+                $value = $value->serialize();
             }
 
-            $result[] = $key . ':' . $value;
+            $result[] = $key . ':' . htmlentities($value);
         }
 
         return implode(' ', $result);
