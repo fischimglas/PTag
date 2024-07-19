@@ -1,0 +1,30 @@
+{
+  "name": "fischimglas/ptag",
+  "description": "PHP tools",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "authors": [
+    {
+      "name": "Jvo A. Maurer",
+      "email": "jvo.maurer@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "ext-json": "*"
+  },
+  "scripts": {
+    "tests": "php vendor/bin/codecept run"
+  },
+  "autoload": {
+    "classmap": [
+      "src/"
+    ]
+  },
+  "require-dev": {
+    "codeception/codeception": "^4.1",
+    "codeception/module-phpbrowser": "^1.0.0",
+    "codeception/module-asserts": "^1.0.0"
+  }
+}
