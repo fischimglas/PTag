@@ -1,6 +1,7 @@
 {
   "name": "fischimglas/ptag",
   "description": "PHP tools",
+  "version": "0.0.1",
   "license": "MIT",
   "minimum-stability": "dev",
   "prefer-stable": true,
