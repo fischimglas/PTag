@@ -27,6 +27,7 @@ class Element implements SerializeableInterface
         'wbr',
     ];
     private array $attributes = [];
+    private array $style = [];
     private array $content = [];
     private ?string $tag;
 
@@ -107,6 +108,35 @@ class Element implements SerializeableInterface
     }
 
     /**
+     * @param string|null $name
+     * @param string|null $value
+     * @return Element
+     */
+    public function setStyle(?string $name = null, mixed $value = null): self
+    {
+        if (!$name) {
+            return $this;
+        }
+
+        $this->style[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string|null $name
+     * @return Element
+     */
+    public function removeStyle(string $name = null): self
+    {
+        if (isset($this->style[$name])) {
+            unset($this->style[$name]);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param array $attributes
      * @return Element
      */
@@ -126,9 +156,18 @@ class Element implements SerializeableInterface
     {
         $tag = [];
         $serializedAttributes = $this->serializeAttributes($this->attributes);
+        $serializedStyle = $this->serializeAttributes($this->style);
+        $isSingletonTag = in_array($this->tag, self::SingletonTags);
         if ($this->tag) {
-            $tag[] = '<' . $this->tag . ($serializedAttributes ? ' ' . $serializedAttributes : '');
-            if (in_array($this->tag, self::SingletonTags)) {
+            $tag[] = '<' . $this->tag;
+            if ($serializedAttributes) {
+                $tag[] = ' ' . $serializedAttributes;
+            }
+            if ($serializedStyle) {
+                $tag[] = ' ' . $serializedStyle;
+            }
+
+            if ($isSingletonTag) {
                 $tag[] = '/>';
             } else {
                 $tag[] = '>';
