@@ -1,9 +1,8 @@
 # PTag
 
-Create html elements
+PHP HTML abstraction, Create html elements
 
 ### Usage
-
 - Create any HTML element with `HtmlFactory::<tagName>($attributes, $childContent)`
 - Add `$element->addClass($className)` and remove `$element->removeClass($className)` css classes
 - Set `$element->setAttribute($attrName,$attrValue)` and remove `$element->removeAttribute($attrName)` attributes
@@ -14,7 +13,7 @@ Create html elements
 ### Example
 
 ```php 
-use src\HtmlFactory;
+use PTag\HtmlFactory;
 
 $html = HtmlFactory::div()
     ->addClass('first-class')
@@ -34,7 +33,7 @@ If no html tag is defined, the element can be used as empty container. Attribute
 ignored.
 
 ```php 
-use src\Element;
+use PTag\Element;
 
 $html = new Element();
 $html->add('Some content')
