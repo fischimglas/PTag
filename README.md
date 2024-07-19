@@ -24,8 +24,9 @@ $html = HtmlFactory::div()
 
 echo $html;
 
-<div class="first-class" tabindex="1" uk-img><a href="#">Link</a><img src="image.png"/></div>
  ```
+Result: 
+`<div class="first-class" tabindex="1" uk-img><a href="#">Link</a><img src="image.png"/></div>`
 
 ### Empty container
 
@@ -39,6 +40,7 @@ $html = new Element();
 $html->add('Some content')
     ->addClass('notshown');
 
-Some content<a href="#">Link</a>
  ```
+Result:
+`Some content<a href="#">Link</a>`
 
