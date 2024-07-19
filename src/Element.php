@@ -156,7 +156,7 @@ class Element implements SerializeableInterface
     {
         $tag = [];
         $serializedAttributes = $this->serializeAttributes($this->attributes);
-        $serializedStyle = $this->serializeAttributes($this->style);
+        $serializedStyle = $this->serializeStyle($this->style);
         $isSingletonTag = in_array($this->tag, self::SingletonTags);
         if ($this->tag) {
             $tag[] = '<' . $this->tag;
@@ -164,7 +164,7 @@ class Element implements SerializeableInterface
                 $tag[] = ' ' . $serializedAttributes;
             }
             if ($serializedStyle) {
-                $tag[] = ' ' . $serializedStyle;
+                $tag[] = ' style="' . $serializedStyle . '"';
             }
 
             if ($isSingletonTag) {
@@ -247,7 +247,24 @@ class Element implements SerializeableInterface
                 $value = htmlentities($value->serialize());
             }
 
-            $result[] = $value === null ? $key : $key . '="' . $value . '"';;
+            $result[] = $value === null ? $key : $key . '="' . $value . '"';
+        }
+
+        return implode(' ', $result);
+    }
+
+    private function serializeStyle(array $styles): string
+    {
+        $result = [];
+
+        foreach ($styles as $key => $value) {
+            if (is_array($value)) {
+                $value = $this->serializeStyle($value);
+            } elseif ($value instanceof SerializeableInterface) {
+                $value = htmlentities($value->serialize());
+            }
+
+            $result[] = $key . ':' . $value;
         }
 
         return implode(' ', $result);
