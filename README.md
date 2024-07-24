@@ -2,6 +2,9 @@
 
 PHP HTML abstraction, Create html elements
 
+### Installation
+`composer require fischimglas/ptag`
+
 ### Usage
 - Create any HTML element with `HtmlFactory::<tagName>($attributes, $childContent)`
 - Add `$element->addClass($className)` and remove `$element->removeClass($className)` css classes

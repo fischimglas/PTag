@@ -1,14 +1,17 @@
 {
   "name": "fischimglas/ptag",
-  "description": "PHP tools",
-  "version": "0.0.1",
+  "description": "PHP HTML abstraction, Create html elements",
+  "version": "1.0.0",
+  "type": "library",
   "license": "MIT",
   "minimum-stability": "dev",
   "prefer-stable": true,
+  "homepage": "https://github.com/fischimglas/PTag",
   "authors": [
     {
       "name": "Jvo A. Maurer",
-      "email": "jvo.maurer@gmail.com"
+      "email": "jvo.maurer@gmail.com",
+      "homepage": "https://codenoise.ch"
     }
   ],
   "require": {
