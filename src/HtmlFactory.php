@@ -67,6 +67,11 @@ class HtmlFactory
         return self::element('head', $attributes, $children);
     }
 
+    public static function button(?array $attributes = [], $children = null): Element
+    {
+        return new Element('button', $attributes, $children);
+    }
+
     public static function canvas(?array $attributes = [], $children = null): Element
     {
         return self::element('canvas', $attributes, $children);
