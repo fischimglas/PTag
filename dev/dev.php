@@ -8,11 +8,17 @@ use PTag\HtmlFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-ElementCf::setMode(ElementCf::MODE_XHML);
+ElementCf::setMode(ElementCf::MODE_HTML5);
 
-echo HtmlFactory::empty()
+echo HtmlFactory::div()
     ->add('Some content')
-    ->addClass('notshown');
+    ->addClass(['test', 'b', 'a', ['another']])
+    ->addClass('some funny classes')
+    ->addClass('some funny classes')
+    ->addClass('notshown')
+    ->setAttributes([
+        'test' => null,
+    ]);
 
 
 

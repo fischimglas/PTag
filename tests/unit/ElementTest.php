@@ -11,6 +11,8 @@ class ElementTest extends TestCase
 {
     public function testDuplicateCssClass()
     {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
         $expected = '<div class="mb-1 mb-2"></div>';
 
         $e = new Element('div', ['class' => ['mb-1', 'mb-2', 'mb-1']]);
@@ -22,6 +24,8 @@ class ElementTest extends TestCase
 
     public function testElementHtml5()
     {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
         $img = new Element('img');
         $img->setAttribute('src', 'google.com');
 
@@ -44,11 +48,11 @@ class ElementTest extends TestCase
         $img->setAttribute('src', 'google.com');
 
         $e = new Element('a', ['class' => 'red'], 'some content');
-        $e->setAttributes(['href' => 'google.com']);
+        $e->setAttributes(['href' => 'google.com', 'lang' => null]);
         $e->add('Some more content');
         $e->add($img);
 
-        $expected = '<a class="red" href="google.com">some contentSome more content<img src="google.com" /></a>';
+        $expected = '<a class="red" href="google.com" lang="">some contentSome more content<img src="google.com" /></a>';
         $actual = $e->serialize();
 
         self::assertEquals($expected, $actual);
@@ -56,6 +60,8 @@ class ElementTest extends TestCase
 
     public function testEmptyAttribute()
     {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
         $expected = '<div empty>My name is frank</div>';
 
         $e = new Element('div', ['empty' => null]);
@@ -68,6 +74,8 @@ class ElementTest extends TestCase
 
     public function testMultiTypeContent()
     {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
         $expected = '<div class="test">text<a></a>text1text2{"a":1}</div>';
 
         $test = new StdClass();
@@ -89,6 +97,8 @@ class ElementTest extends TestCase
 
     public function testStyleAttributeAsArray()
     {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
         $expected = '<div style="color:black;background:red"></div>';
 
         $e = new Element('div', ['style' => ['color' => 'black', 'background' => 'red']]);

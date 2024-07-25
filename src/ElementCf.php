@@ -10,6 +10,7 @@ class ElementCf
 
     public static string $mode = self::MODE_HTML5;
     public static bool $trailingSlashesForVoidElements = false;
+    public static bool $attributeMinimization = true;
 
     public static function setMode(string $mode): void
     {
@@ -23,10 +24,12 @@ class ElementCf
     private static function configureModeHtml5(): void
     {
         self::$trailingSlashesForVoidElements = false;
+        self::$attributeMinimization = true;
     }
 
     private static function configureModeXhtml(): void
     {
         self::$trailingSlashesForVoidElements = true;
+        self::$attributeMinimization = false;
     }
 }

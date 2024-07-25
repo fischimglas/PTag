@@ -47,10 +47,10 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param array $attributes
+     * @param array|null $attributes
      * @return Element
      */
-    public function setAttributes(array $attributes): self
+    public function setAttributes(?array $attributes = []): self
     {
         foreach ($attributes as $key => $value) {
             $this->setAttribute($key, $value);
@@ -63,7 +63,7 @@ class Element implements SerializeableInterface
      * @param null $content
      * @return Element
      */
-    public function add($content = null): self
+    public function add(mixed $content = null): self
     {
         if ($content) {
             $this->content[] = $content;
@@ -79,9 +79,6 @@ class Element implements SerializeableInterface
      */
     public function setAttribute(string $name, mixed $value = null): self
     {
-        if (!$name) {
-            return $this;
-        }
         if ($name === 'class') {
             $value = $this->mergeCssClasses($value);
         }
@@ -91,14 +88,17 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param string|array $cssClass
+     * @param string|array|null $cssClasses
      * @return string
      */
-    private function mergeCssClasses(string|array $cssClass): string
+    private function mergeCssClasses(null|string|array $cssClasses = []): string
     {
-        $newClasses = is_string($cssClass) ? explode(' ', $cssClass) : $cssClass;
+        $classes[] = $this->getClasses();
+        if (!is_null($cssClasses)) {
+            $classes[] = is_string($cssClasses) ? explode(' ', $cssClasses) : $cssClasses;
+        }
 
-        return implode(' ', array_filter(array_unique(array_merge($this->getClasses(), $newClasses))));
+        return implode(' ', array_filter(array_unique(array_merge(...$classes))));
     }
 
     public function getClasses(): array
@@ -148,6 +148,7 @@ class Element implements SerializeableInterface
     /**
      * Create attribute string from array
      * - Adds only the attribute name if the value is null
+     * - Minimize attributes if value is null and HTML5 mode
      * - If attribute value is an array, serialize it, assuming it's css style
      * * @param array $attributes
      * @return string
@@ -167,7 +168,7 @@ class Element implements SerializeableInterface
                 $value = $value->serialize();
             }
 
-            $result[] = $value === null ? $key : $key . '="' . htmlentities($value . '') . '"';
+            $result[] = $value === null && ElementCf::$attributeMinimization ? $key : $key . '="' . htmlentities($value . '') . '"';
         }
 
         return implode(' ', $result);
