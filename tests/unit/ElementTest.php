@@ -4,11 +4,23 @@ namespace unit;
 
 use PHPUnit\Framework\TestCase;
 use PTag\Element;
+use PTag\ElementCf;
 use stdClass;
 
 class ElementTest extends TestCase
 {
-    public function testElement()
+    public function testDuplicateCssClass()
+    {
+        $expected = '<div class="mb-1 mb-2"></div>';
+
+        $e = new Element('div', ['class' => ['mb-1', 'mb-2', 'mb-1']]);
+
+        $actual = $e->serialize();
+
+        self::assertEquals($expected, $actual);
+    }
+
+    public function testElementHtml5()
     {
         $img = new Element('img');
         $img->setAttribute('src', 'google.com');
@@ -18,7 +30,25 @@ class ElementTest extends TestCase
         $e->add('Some more content');
         $e->add($img);
 
-        $expected = '<a class="red" href="google.com">some contentSome more content<img src="google.com"/></a>';
+        $expected = '<a class="red" href="google.com">some contentSome more content<img src="google.com"></a>';
+        $actual = $e->serialize();
+
+        self::assertEquals($expected, $actual);
+    }
+
+    public function testElementXhtml()
+    {
+        ElementCf::setMode(ElementCf::MODE_XHML);
+
+        $img = new Element('img');
+        $img->setAttribute('src', 'google.com');
+
+        $e = new Element('a', ['class' => 'red'], 'some content');
+        $e->setAttributes(['href' => 'google.com']);
+        $e->add('Some more content');
+        $e->add($img);
+
+        $expected = '<a class="red" href="google.com">some contentSome more content<img src="google.com" /></a>';
         $actual = $e->serialize();
 
         self::assertEquals($expected, $actual);
@@ -26,32 +56,10 @@ class ElementTest extends TestCase
 
     public function testEmptyAttribute()
     {
-        $expected = '<div empty>My name is Sulaco</div>';
+        $expected = '<div empty>My name is frank</div>';
 
         $e = new Element('div', ['empty' => null]);
-        $e->add('My name is Sulaco');
-
-        $actual = $e->serialize();
-
-        self::assertEquals($expected, $actual);
-    }
-
-    public function testStyleAttributeAsArray()
-    {
-        $expected = '<div style="color:black;background:red"></div>';
-
-        $e = new Element('div', ['style' => ['color' => 'black', 'background' => 'red']]);
-
-        $actual = $e->serialize();
-
-        self::assertEquals($expected, $actual);
-    }
-
-    public function testDuplicateCssClass()
-    {
-        $expected = '<div class="mb-1 mb-2"></div>';
-
-        $e = new Element('div', ['class' => ['mb-1', 'mb-2', 'mb-1']]);
+        $e->add('My name is frank');
 
         $actual = $e->serialize();
 
@@ -79,4 +87,14 @@ class ElementTest extends TestCase
         self::assertEquals($expected, $actual);
     }
 
+    public function testStyleAttributeAsArray()
+    {
+        $expected = '<div style="color:black;background:red"></div>';
+
+        $e = new Element('div', ['style' => ['color' => 'black', 'background' => 'red']]);
+
+        $actual = $e->serialize();
+
+        self::assertEquals($expected, $actual);
+    }
 }

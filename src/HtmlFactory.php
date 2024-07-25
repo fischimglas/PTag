@@ -6,9 +6,15 @@ namespace PTag;
 
 class HtmlFactory
 {
+
     public static function a(?array $attributes = [], $children = null): Element
     {
         return self::element('a', $attributes, $children);
+    }
+
+    public static function element(?string $elementName = null, ?array $attributes = [], $children = null): Element
+    {
+        return new Element($elementName, $attributes, $children);
     }
 
     public static function abbr(?array $attributes = [], $children = null): Element
@@ -126,11 +132,6 @@ class HtmlFactory
         return self::element('dt', $attributes, $children);
     }
 
-    public static function element(?string $elementName = null, ?array $attributes = [], $children = null): Element
-    {
-        return new Element($elementName, $attributes, $children);
-    }
-
     public static function em(?array $attributes = [], $children = null): Element
     {
         return self::element('em', $attributes, $children);
@@ -139,6 +140,11 @@ class HtmlFactory
     public static function embed(?array $attributes = [], $children = null): Element
     {
         return self::element('embed', $attributes, $children);
+    }
+
+    public static function empty($children = null): Element
+    {
+        return self::element(null, null, $children);
     }
 
     public static function figcaption(?array $attributes = [], $children = null): Element

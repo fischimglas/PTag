@@ -26,6 +26,7 @@ class Element implements SerializeableInterface
         'track',
         'wbr',
     ];
+
     private array $attributes = [];
     private array $style = [];
     private array $content = [];
@@ -36,18 +37,26 @@ class Element implements SerializeableInterface
      * @param array|null $attributes
      * @param $content
      */
-    public function __construct(?string $tagName = null, ?array $attributes = null, $content = null)
+    public function __construct(?string $tagName = null, ?array $attributes = [], $content = null)
     {
         $this->tag = $tagName ? strtolower($tagName) : null;
-        if ($attributes !== null) {
+        if ($this->tag) {
             $this->setAttributes($attributes);
         }
         $this->add($content);
     }
 
-    public function __toString(): string
+    /**
+     * @param array $attributes
+     * @return Element
+     */
+    public function setAttributes(array $attributes): self
     {
-        return $this->compile();
+        foreach ($attributes as $key => $value) {
+            $this->setAttribute($key, $value);
+        }
+
+        return $this;
     }
 
     /**
@@ -63,25 +72,12 @@ class Element implements SerializeableInterface
         return $this;
     }
 
-    public function clone(): self
-    {
-        return clone $this;
-    }
-
     /**
-     * @return string
-     */
-    public function serialize(): string
-    {
-        return $this->compile();
-    }
-
-    /**
-     * @param string|null $name
+     * @param string $name
      * @param string|null $value
      * @return Element
      */
-    public function setAttribute(?string $name = null, mixed $value = null): self
+    public function setAttribute(string $name, mixed $value = null): self
     {
         if (!$name) {
             return $this;
@@ -95,58 +91,24 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param string|null $name
-     * @return Element
+     * @param string|array $cssClass
+     * @return string
      */
-    public function removeAttribute(string $name = null): self
+    private function mergeCssClasses(string|array $cssClass): string
     {
-        if (isset($this->attributes[$name])) {
-            unset($this->attributes[$name]);
-        }
+        $newClasses = is_string($cssClass) ? explode(' ', $cssClass) : $cssClass;
 
-        return $this;
+        return implode(' ', array_filter(array_unique(array_merge($this->getClasses(), $newClasses))));
     }
 
-    /**
-     * @param string|null $name
-     * @param string|null $value
-     * @return Element
-     */
-    public function setStyle(?string $name = null, mixed $value = null): self
+    public function getClasses(): array
     {
-        if (!$name) {
-            return $this;
-        }
-
-        $this->style[$name] = $value;
-
-        return $this;
+        return explode(' ', $this->attributes['class'] ?? '');
     }
 
-    /**
-     * @param string|null $name
-     * @return Element
-     */
-    public function removeStyle(string $name = null): self
+    public function __toString(): string
     {
-        if (isset($this->style[$name])) {
-            unset($this->style[$name]);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param array $attributes
-     * @return Element
-     */
-    public function setAttributes(array $attributes): self
-    {
-        foreach ($attributes as $key => $value) {
-            $this->setAttribute($key, $value);
-        }
-
-        return $this;
+        return $this->compile();
     }
 
     /**
@@ -168,7 +130,7 @@ class Element implements SerializeableInterface
             }
 
             if ($isSingletonTag) {
-                $tag[] = '/>';
+                $tag[] = (ElementCf::$trailingSlashesForVoidElements ? ' /' : '') . '>';
             } else {
                 $tag[] = '>';
                 if ($this->content) {
@@ -181,48 +143,6 @@ class Element implements SerializeableInterface
         } else {
             return $this->serializeContent($this->content);
         }
-    }
-
-    public function getClasses(): array
-    {
-        return explode(' ', $this->attributes['class'] ?? '');
-    }
-
-    /**
-     * @param string|array $cssClass
-     * @return string
-     */
-    private function mergeCssClasses(string|array $cssClass): string
-    {
-        $newClasses = is_string($cssClass) ? explode(' ', $cssClass) : $cssClass;
-
-        return implode(' ', array_filter(array_unique(array_merge($this->getClasses(), $newClasses))));
-    }
-
-    /**
-     * @param string|array $className
-     * @return Element
-     */
-    public function addClass(string|array $className): self
-    {
-        $this->setAttribute('class', $this->mergeCssClasses($className));
-
-        return $this;
-    }
-
-    /**
-     * @param string $className
-     * @return $this
-     */
-    public function removeClass(string $className): self
-    {
-        $classes = $this->getClasses();
-        if (isset($classes[$className])) {
-            unset($classes[$className]);
-        }
-        $this->setAttribute('class', implode(' ', $classes));
-
-        return $this;
     }
 
     /**
@@ -247,7 +167,7 @@ class Element implements SerializeableInterface
                 $value = $value->serialize();
             }
 
-            $result[] = $value === null ? $key : $key . '="' . htmlentities($value) . '"';
+            $result[] = $value === null ? $key : $key . '="' . htmlentities($value . '') . '"';
         }
 
         return implode(' ', $result);
@@ -264,7 +184,7 @@ class Element implements SerializeableInterface
                 $value = $value->serialize();
             }
 
-            $result[] = $key . ':' . htmlentities($value);
+            $result[] = $key . ':' . htmlentities($value . '');
         }
 
         return implode(' ', $result);
@@ -289,5 +209,86 @@ class Element implements SerializeableInterface
         } else {
             return '';
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function serialize(): string
+    {
+        return $this->compile();
+    }
+
+    /**
+     * @param string|array $className
+     * @return Element
+     */
+    public function addClass(string|array $className): self
+    {
+        $this->setAttribute('class', $this->mergeCssClasses($className));
+
+        return $this;
+    }
+
+    public function clone(): self
+    {
+        return clone $this;
+    }
+
+    /**
+     * @param string|null $name
+     * @return Element
+     */
+    public function removeAttribute(string $name = null): self
+    {
+        if (isset($this->attributes[$name])) {
+            unset($this->attributes[$name]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $className
+     * @return $this
+     */
+    public function removeClass(string $className): self
+    {
+        $classes = $this->getClasses();
+        if (isset($classes[$className])) {
+            unset($classes[$className]);
+        }
+        $this->setAttribute('class', implode(' ', $classes));
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return Element
+     */
+    public function removeStyle(string $name): self
+    {
+        if (isset($this->style[$name])) {
+            unset($this->style[$name]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @return Element
+     */
+    public function setStyle(string $name, mixed $value): self
+    {
+        if (is_null($value)) {
+            return $this;
+        }
+
+        $this->style[$name] = $value;
+
+        return $this;
     }
 }
