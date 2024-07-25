@@ -31,7 +31,7 @@ echo HtmlFactory::div()
  ```
 
 Result:
-`<div class="first-class" tabindex="1" uk-img style="background:red"><a href="#">Link</a><img src="image.png"/></div>`
+`<div class="first-class" tabindex="1" uk-img style="background:red"><a href="#">Link</a><img src="image.png"></div>`
 
 ### Empty container
 
