@@ -35,12 +35,12 @@ class Element implements SerializeableInterface
     /**
      * @param string|null $tagName
      * @param array|null $attributes
-     * @param $content
+     * @param mixed $content
      */
-    public function __construct(?string $tagName = null, ?array $attributes = [], $content = null)
+    public function __construct(?string $tagName = null, ?array $attributes = [], mixed $content = null)
     {
         $this->tag = $tagName ? strtolower($tagName) : null;
-        if ($this->tag) {
+        if ($this->tag && is_array($attributes)) {
             $this->setAttributes($attributes);
         }
         $this->add($content);
