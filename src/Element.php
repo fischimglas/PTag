@@ -52,6 +52,9 @@ class Element implements SerializeableInterface
      */
     public function setAttributes(?array $attributes = []): self
     {
+        if (is_null($attributes)) {
+            return $this;
+        }
         foreach ($attributes as $key => $value) {
             $this->setAttribute($key, $value);
         }
@@ -65,9 +68,11 @@ class Element implements SerializeableInterface
      */
     public function add(mixed $content = null): self
     {
-        if ($content) {
-            $this->content[] = $content;
+        if (is_null($content)) {
+            return $this;
         }
+        
+        $this->content[] = $content;
 
         return $this;
     }
