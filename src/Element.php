@@ -71,7 +71,7 @@ class Element implements SerializeableInterface
         if (is_null($content)) {
             return $this;
         }
-        
+
         $this->content[] = $content;
 
         return $this;
@@ -205,16 +205,16 @@ class Element implements SerializeableInterface
         if (is_null($elements)) {
             return '';
         } elseif (is_string($elements) || is_bool($elements) || is_numeric($elements)) {
-            return $elements;
+            return $elements . '';
         } elseif ($elements instanceof SerializeableInterface) {
             return $elements->serialize();
         } elseif (is_array($elements)) {
             return implode('', array_map(fn($it) => $this->serializeContent($it), $elements));
         } elseif (is_object($elements)) {
             return json_encode($elements);
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     /**
