@@ -297,4 +297,15 @@ class Element implements SerializeableInterface
 
         return $this;
     }
+
+    /**
+     * @param string|null $tagName
+     * @return $this
+     */
+    public function setTag(?string $tagName = null): self
+    {
+        $this->tag = $tagName;
+
+        return $this;
+    }
 }
