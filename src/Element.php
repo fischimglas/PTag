@@ -182,7 +182,7 @@ class Element implements SerializeableInterface
     private function serializeStyle(array $styles): string
     {
         $result = [];
-
+        $styles = array_filter($styles);
         foreach ($styles as $key => $value) {
             if (is_array($value)) {
                 $value = $this->serializeStyle($value);
@@ -193,7 +193,7 @@ class Element implements SerializeableInterface
             $result[] = $key . ':' . htmlentities($value . '');
         }
 
-        return implode(' ', $result);
+        return implode(';', $result);
     }
 
     /**
@@ -226,10 +226,10 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param string|array $className
+     * @param string|array|null $className
      * @return Element
      */
-    public function addClass(string|array $className): self
+    public function addClass(null|string|array $className): self
     {
         $this->setAttribute('class', $this->mergeCssClasses($className));
 
@@ -245,9 +245,9 @@ class Element implements SerializeableInterface
      * @param string|null $name
      * @return Element
      */
-    public function removeAttribute(string $name = null): self
+    public function removeAttribute(?string $name = null): self
     {
-        if (isset($this->attributes[$name])) {
+        if (!is_null($name) && isset($this->attributes[$name])) {
             unset($this->attributes[$name]);
         }
 
@@ -255,11 +255,15 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param string $className
+     * @param string|null $className
      * @return $this
      */
-    public function removeClass(string $className): self
+    public function removeClass(?string $className = null): self
     {
+        if (is_null($className)) {
+            return $this;
+        }
+
         $classes = $this->getClasses();
         if (isset($classes[$className])) {
             unset($classes[$className]);
@@ -270,12 +274,12 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      * @return Element
      */
-    public function removeStyle(string $name): self
+    public function removeStyle(?string $name = null): self
     {
-        if (isset($this->style[$name])) {
+        if (!is_null($name) && isset($this->style[$name])) {
             unset($this->style[$name]);
         }
 
