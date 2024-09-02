@@ -95,6 +95,43 @@ class ElementTest extends TestCase
         self::assertEquals($expected, $actual);
     }
 
+    public function testRemoveAttribute()
+    {
+        $e = new Element('div');
+        $e->setAttribute('alt', 'test');
+        $e->removeAttribute('alt');
+
+        $actual = $e->serialize();
+
+        $expected = '<div></div>';
+        self::assertEquals($expected, $actual);
+    }
+
+    public function testRemoveClass()
+    {
+        $e = new Element('div');
+        $e->addClass('test');
+        $e->removeClass('test');
+
+        $actual = $e->serialize();
+
+        $expected = '<div></div>';
+        self::assertEquals($expected, $actual);
+    }
+
+    public function testRemoveClasses()
+    {
+        $e = new Element('div');
+        $e->addClass('test test2 test3 test4 test5 test6');
+        $e->removeClass('test test2 test3');
+        $e->removeClass(['test4', 'test5']);
+
+        $actual = $e->serialize();
+
+        $expected = '<div class="test6"></div>';
+        self::assertEquals($expected, $actual);
+    }
+
     public function testStyleAttributeAsArray()
     {
         ElementCf::setMode(ElementCf::MODE_HTML5);

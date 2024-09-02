@@ -52,11 +52,10 @@ class Element implements SerializeableInterface
      */
     public function setAttributes(?array $attributes = []): self
     {
-        if (is_null($attributes)) {
-            return $this;
-        }
-        foreach ($attributes as $key => $value) {
-            $this->setAttribute($key, $value);
+        if (!is_null($attributes)) {
+            foreach ($attributes as $key => $value) {
+                $this->setAttribute($key, $value);
+            }
         }
 
         return $this;
@@ -68,11 +67,9 @@ class Element implements SerializeableInterface
      */
     public function add(mixed $content = null): self
     {
-        if (is_null($content)) {
-            return $this;
+        if (!is_null($content)) {
+            $this->content[] = $content;
         }
-
-        $this->content[] = $content;
 
         return $this;
     }
@@ -98,14 +95,33 @@ class Element implements SerializeableInterface
      */
     private function mergeCssClasses(null|string|array $cssClasses = []): string
     {
-        $classes[] = $this->getClasses();
-        if (!is_null($cssClasses)) {
-            $classes[] = is_string($cssClasses) ? explode(' ', $cssClasses) : $cssClasses;
+        $newClasses = [];
+        if (is_array($cssClasses)) {
+            $newClasses = $this->flattenNestedArray($cssClasses);
+        } elseif (is_string($cssClasses)) {
+            $newClasses = explode(' ', $cssClasses);
         }
 
-        return implode(' ', array_filter(array_unique(array_merge(...$classes))));
+        return implode(' ', array_unique(array_filter(array_merge($this->getClasses(), $newClasses))));
     }
 
+    private function flattenNestedArray(array $array): array
+    {
+        $result = [];
+        foreach ($array as $value) {
+            if (is_array($value)) {
+                $result[] = $this->flattenNestedArray($value);
+            } elseif (is_string($value)) {
+                $result[] = [$value];
+            }
+        }
+
+        return array_merge(...$result);
+    }
+
+    /**
+     * @return array
+     */
     public function getClasses(): array
     {
         return explode(' ', $this->attributes['class'] ?? '');
@@ -125,29 +141,29 @@ class Element implements SerializeableInterface
         $serializedAttributes = $this->serializeAttributes($this->attributes);
         $serializedStyle = $this->serializeStyle($this->style);
         $isSingletonTag = in_array($this->tag, self::SingletonTags);
-        if ($this->tag) {
-            $tag[] = '<' . $this->tag;
-            if ($serializedAttributes) {
-                $tag[] = ' ' . $serializedAttributes;
-            }
-            if ($serializedStyle) {
-                $tag[] = ' style="' . $serializedStyle . '"';
-            }
-
-            if ($isSingletonTag) {
-                $tag[] = (ElementCf::$trailingSlashesForVoidElements ? ' /' : '') . '>';
-            } else {
-                $tag[] = '>';
-                if ($this->content) {
-                    $tag[] = $this->serializeContent($this->content);
-                }
-                $tag[] = '</' . $this->tag . '>';
-            }
-
-            return implode('', $tag);
-        } else {
+        if (!$this->tag) {
             return $this->serializeContent($this->content);
         }
+
+        $tag[] = '<' . $this->tag;
+        if ($serializedAttributes) {
+            $tag[] = ' ' . $serializedAttributes;
+        }
+        if ($serializedStyle) {
+            $tag[] = ' style="' . $serializedStyle . '"';
+        }
+
+        if ($isSingletonTag) {
+            $tag[] = (ElementCf::$trailingSlashesForVoidElements ? ' /' : '') . '>';
+        } else {
+            $tag[] = '>';
+            if ($this->content) {
+                $tag[] = $this->serializeContent($this->content);
+            }
+            $tag[] = '</' . $this->tag . '>';
+        }
+
+        return implode('', $tag);
     }
 
     /**
@@ -164,11 +180,7 @@ class Element implements SerializeableInterface
 
         foreach ($attributes as $key => $value) {
             if (is_array($value)) {
-                $valueItems = [];
-                foreach ($value as $valueKey => $valueValue) {
-                    $valueItems[] = $valueKey . ':' . $valueValue;
-                }
-                $value = implode(';', $valueItems);
+                $value = implode(';', array_map(fn($vKey, $vValue) => "$vKey:$vValue", array_keys($value), $value));
             } elseif ($value instanceof SerializeableInterface) {
                 $value = $value->serialize();
             }
@@ -179,6 +191,10 @@ class Element implements SerializeableInterface
         return implode(' ', $result);
     }
 
+    /**
+     * @param array $styles
+     * @return string
+     */
     private function serializeStyle(array $styles): string
     {
         $result = [];
@@ -231,7 +247,9 @@ class Element implements SerializeableInterface
      */
     public function addClass(null|string|array $className): self
     {
-        $this->setAttribute('class', $this->mergeCssClasses($className));
+        if (!is_null($className)) {
+            $this->setAttribute('class', $this->mergeCssClasses($className));
+        }
 
         return $this;
     }
@@ -239,6 +257,35 @@ class Element implements SerializeableInterface
     public function clone(): self
     {
         return clone $this;
+    }
+
+    /**
+     * @param string|array|null $className
+     * @return $this
+     */
+    public function removeClass(null|string|array $className = null): self
+    {
+        if (is_string($className)) {
+            $className = explode(' ', $className);
+        }
+
+        if (is_array($className)) {
+            $existingClasses = array_flip($this->getClasses());
+            foreach ($className as $currentClass) {
+                if (isset($existingClasses[$currentClass])) {
+                    unset($existingClasses[$currentClass]);
+                }
+            }
+
+            $classString = implode(' ', array_keys($existingClasses));
+            if (strlen($classString)) {
+                $this->attributes['class'] = implode(' ', array_keys($existingClasses));
+            } else {
+                $this->removeAttribute('class');
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -250,25 +297,6 @@ class Element implements SerializeableInterface
         if (!is_null($name) && isset($this->attributes[$name])) {
             unset($this->attributes[$name]);
         }
-
-        return $this;
-    }
-
-    /**
-     * @param string|null $className
-     * @return $this
-     */
-    public function removeClass(?string $className = null): self
-    {
-        if (is_null($className)) {
-            return $this;
-        }
-
-        $classes = $this->getClasses();
-        if (isset($classes[$className])) {
-            unset($classes[$className]);
-        }
-        $this->setAttribute('class', implode(' ', $classes));
 
         return $this;
     }
@@ -293,11 +321,9 @@ class Element implements SerializeableInterface
      */
     public function setStyle(string $name, mixed $value): self
     {
-        if (is_null($value)) {
-            return $this;
+        if (!is_null($value)) {
+            $this->style[$name] = $value;
         }
-
-        $this->style[$name] = $value;
 
         return $this;
     }
