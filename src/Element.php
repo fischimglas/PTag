@@ -371,7 +371,7 @@ class Element implements SerializeableInterface
      */
     public function setTag(?string $tagName = null): self
     {
-        $this->tag = $tagName;
+        $this->tag = $tagName ? strtolower($tagName) : null;
 
         return $this;
     }

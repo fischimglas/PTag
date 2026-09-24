@@ -10,7 +10,7 @@ signatures, constants). Only additive changes and fixes of clearly broken output
 | 03 | [Boolean attribute values render wrong](03-boolean-attributes.md) | fixed |
 | 04 | [`clone()` is shallow](04-shallow-clone.md) | fixed |
 | 05 | [`setAttribute('class', …)` merges instead of replacing](05-class-attribute-merge.md) | open |
-| 06 | [`setTag()` does not lowercase](06-settag-lowercase.md) | open |
+| 06 | [`setTag()` does not lowercase](06-settag-lowercase.md) | fixed |
 | 07 | [Attributes of tagless elements are discarded](07-tagless-attributes.md) | open |
 | 08 | [Numeric CSS class names are dropped](08-numeric-classes.md) | open |
 | 09 | [Array style values produce invalid CSS](09-array-style-values.md) | open |

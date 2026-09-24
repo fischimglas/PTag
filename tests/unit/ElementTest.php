@@ -193,4 +193,13 @@ class ElementTest extends TestCase
         self::assertEquals('<div><span></span><b></b></div>', $copy->serialize());
         self::assertEquals('<div><span class="changed"></span><b class="changed"></b></div>', $original->serialize());
     }
+
+    public function testSetTagIsLowercased()
+    {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
+        self::assertEquals('<div></div>', (new Element('span'))->setTag('DIV')->serialize());
+        self::assertEquals('<img>', (new Element('span'))->setTag('IMG')->serialize());
+        self::assertEquals('text', (new Element('span', [], 'text'))->setTag('')->serialize());
+    }
 }
