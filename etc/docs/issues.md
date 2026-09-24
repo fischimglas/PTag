@@ -8,7 +8,7 @@ signatures, constants). Only additive changes and fixes of clearly broken output
 | 01 | [CI: composer script name / validate fails](01-ci-broken.md) | fixed |
 | 02 | [Style value `0` is dropped](02-style-zero-dropped.md) | fixed |
 | 03 | [Boolean attribute values render wrong](03-boolean-attributes.md) | fixed |
-| 04 | [`clone()` is shallow](04-shallow-clone.md) | open |
+| 04 | [`clone()` is shallow](04-shallow-clone.md) | fixed |
 | 05 | [`setAttribute('class', …)` merges instead of replacing](05-class-attribute-merge.md) | open |
 | 06 | [`setTag()` does not lowercase](06-settag-lowercase.md) | open |
 | 07 | [Attributes of tagless elements are discarded](07-tagless-attributes.md) | open |

@@ -176,4 +176,21 @@ class ElementTest extends TestCase
 
         ElementCf::setMode(ElementCf::MODE_HTML5);
     }
+
+    public function testCloneIsDeep()
+    {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
+        $child = new Element('span');
+        $nested = new Element('b');
+        $original = new Element('div', [], $child);
+        $original->add([$nested]);
+
+        $copy = $original->clone();
+        $child->addClass('changed');
+        $nested->addClass('changed');
+
+        self::assertEquals('<div><span></span><b></b></div>', $copy->serialize());
+        self::assertEquals('<div><span class="changed"></span><b class="changed"></b></div>', $original->serialize());
+    }
 }

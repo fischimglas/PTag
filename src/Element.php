@@ -278,6 +278,25 @@ class Element implements SerializeableInterface
     }
 
     /**
+     * Deep clone: child elements are cloned as well, so the copy can be modified independently
+     */
+    public function __clone(): void
+    {
+        $this->content = $this->cloneContent($this->content);
+    }
+
+    private function cloneContent(mixed $content): mixed
+    {
+        if ($content instanceof self) {
+            return clone $content;
+        } elseif (is_array($content)) {
+            return array_map(fn($it) => $this->cloneContent($it), $content);
+        }
+
+        return $content;
+    }
+
+    /**
      * @param string|array|null $className
      * @return $this
      */
