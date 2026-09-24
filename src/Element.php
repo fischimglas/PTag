@@ -198,7 +198,7 @@ class Element implements SerializeableInterface
     private function serializeStyle(array $styles): string
     {
         $result = [];
-        $styles = array_filter($styles);
+        $styles = array_filter($styles, fn($value) => $value !== null && $value !== '' && $value !== false);
         foreach ($styles as $key => $value) {
             if (is_array($value)) {
                 $value = $this->serializeStyle($value);

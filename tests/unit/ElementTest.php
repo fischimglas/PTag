@@ -144,4 +144,16 @@ class ElementTest extends TestCase
 
         self::assertEquals($expected, $actual);
     }
+
+    public function testStyleZeroValueIsKept()
+    {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
+        $e = new Element('div');
+        $e->setStyle('opacity', 0);
+        $e->setStyle('margin', '0');
+        $e->setStyle('padding', '');
+
+        self::assertEquals('<div style="opacity:0;margin:0"></div>', $e->serialize());
+    }
 }

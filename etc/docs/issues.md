@@ -6,7 +6,7 @@ signatures, constants). Only additive changes and fixes of clearly broken output
 | # | Issue | Status |
 |---|-------|--------|
 | 01 | [CI: composer script name / validate fails](01-ci-broken.md) | fixed |
-| 02 | [Style value `0` is dropped](02-style-zero-dropped.md) | open |
+| 02 | [Style value `0` is dropped](02-style-zero-dropped.md) | fixed |
 | 03 | [Boolean attribute values render wrong](03-boolean-attributes.md) | open |
 | 04 | [`clone()` is shallow](04-shallow-clone.md) | open |
 | 05 | [`setAttribute('class', …)` merges instead of replacing](05-class-attribute-merge.md) | open |
