@@ -88,16 +88,16 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param string|array|null $cssClasses
+     * @param string|int|float|array|null $cssClasses
      * @return string
      */
-    private function mergeCssClasses(null|string|array $cssClasses = []): string
+    private function mergeCssClasses(null|string|int|float|array $cssClasses = []): string
     {
         $newClasses = [];
         if (is_array($cssClasses)) {
             $newClasses = $this->flattenNestedArray($cssClasses);
-        } elseif (is_string($cssClasses)) {
-            $newClasses = explode(' ', $cssClasses);
+        } elseif (is_string($cssClasses) || is_int($cssClasses) || is_float($cssClasses)) {
+            $newClasses = explode(' ', (string)$cssClasses);
         }
 
         return implode(' ', array_unique(array_filter(array_merge($this->getClasses(), $newClasses))));
@@ -109,8 +109,8 @@ class Element implements SerializeableInterface
         foreach ($array as $value) {
             if (is_array($value)) {
                 $result[] = $this->flattenNestedArray($value);
-            } elseif (is_string($value)) {
-                $result[] = [$value];
+            } elseif (is_string($value) || is_int($value) || is_float($value)) {
+                $result[] = [(string)$value];
             }
         }
 

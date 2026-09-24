@@ -212,4 +212,14 @@ class ElementTest extends TestCase
         self::assertEquals('content', $e->serialize());
         self::assertEquals('<div id="x" class="a">content</div>', $e->setTag('div')->serialize());
     }
+
+    public function testNumericClassNames()
+    {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
+        $e = new Element('div', ['class' => ['a', 5]]);
+        $e->setAttribute('class', 7);
+
+        self::assertEquals('<div class="a 5 7"></div>', $e->serialize());
+    }
 }
