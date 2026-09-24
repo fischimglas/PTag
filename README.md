@@ -11,9 +11,10 @@ PHP HTML abstraction, Create html elements
 - Create any HTML element with `HtmlFactory::<tagName>($attributes, $childContent)`
 - Add `$element->addClass($className)` and remove `$element->removeClass($className)` css classes
 - Set `$element->setAttribute($attrName,$attrValue)` and remove `$element->removeAttribute($attrName)` attributes
-- Set `$element->setStyle($attrName,$attrValue)` and remove `$element->removeStyle($attrName)` attributes
+- Set `$element->setStyle($styleName,$styleValue)` and remove `$element->removeStyle($styleName)` inline styles
 - Add attributes with no value `$element->setAttribute($attrName)`
-- Clone elements `$element->clone()`
+- Boolean values: `true` renders the attribute without value, `false` omits it (`aria-*` and `data-*` keep `"1"` / `""`)
+- Clone elements `$element->clone()` (deep copy, child elements are cloned too)
 - Chain modifications `$element->clone()->add($anyContent)->addClass('test')`
 
 ### Basic example
@@ -43,6 +44,7 @@ use PTag\HtmlFactory;
 
 echo HtmlFactory::empty()
     ->add('Some content')
+    ->add(HtmlFactory::a(['href' => '#'], 'Link'))
     ->addClass('notshown');
  ```
 
@@ -52,13 +54,14 @@ Result:
 ### Configure mode (HTML5 / XHTML)
 
 By default, HTML5 is assumed and trailing slashes on void elements are avoided. For XHTML,
-use `ElementCf::setMode(ElementCf::MODE_XHML);` to require trailing slashes.
+use `ElementCf::setMode(ElementCf::MODE_XHTML);` to require trailing slashes and disable attribute minimization.
+(`ElementCf::MODE_XHML` still works but is deprecated.)
 
 ```php 
 use PTag\HtmlFactory;
 use PTag\ElementCf;
 
-ElementCf::setMode(ElementCf::MODE_XHML);
+ElementCf::setMode(ElementCf::MODE_XHTML);
 
 echo HtmlFactory::div()
     ->add(HtmlFactory::img(['src' => 'image.png']));
@@ -66,3 +69,23 @@ echo HtmlFactory::div()
 
 Result:
 `<div><img src="image.png" /></div>`
+
+### CSS classes
+
+The `class` attribute is always merged: `setAttribute('class', ...)` and `addClass(...)` add to the existing
+classes and remove duplicates. To replace the classes, call `removeAttribute('class')` first.
+
+```php
+echo HtmlFactory::div(['class' => 'a'])->setAttribute('class', 'b');           // <div class="a b"></div>
+echo HtmlFactory::div(['class' => 'a'])->removeAttribute('class')->addClass('b'); // <div class="b"></div>
+```
+
+### Escaping
+
+- Attribute values and style values are escaped with `htmlentities()`.
+- Attribute names and style property names are sanitized (invalid characters are removed).
+- **Child content is not escaped.** Strings are output as raw HTML. Escape user input yourself:
+
+```php
+echo HtmlFactory::p([], htmlspecialchars($userInput));
+```
