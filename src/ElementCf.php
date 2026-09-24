@@ -16,11 +16,14 @@ class ElementCf
 
     public static function setMode(string $mode): void
     {
-        self::$mode = $mode;
         match ($mode) {
             self::MODE_HTML5 => self::configureModeHtml5(),
-            self::MODE_XHTML => self::configureModeXhtml()
+            self::MODE_XHTML => self::configureModeXhtml(),
+            default => throw new \InvalidArgumentException(
+                sprintf('Unknown mode "%s", use ElementCf::MODE_HTML5 or ElementCf::MODE_XHTML', $mode)
+            ),
         };
+        self::$mode = $mode;
     }
 
     private static function configureModeHtml5(): void

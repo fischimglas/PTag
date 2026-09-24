@@ -12,6 +12,9 @@ PHP HTML abstraction, Create html elements
 - Add `$element->addClass($className)` and remove `$element->removeClass($className)` css classes
 - Set `$element->setAttribute($attrName,$attrValue)` and remove `$element->removeAttribute($attrName)` attributes
 - Set `$element->setStyle($styleName,$styleValue)` and remove `$element->removeStyle($styleName)` inline styles
+  (combined with a `style` attribute, if one is set)
+- Array attribute values: lists are joined with spaces (`['rel' => ['noopener', 'noreferrer']]`),
+  associative arrays become `key:value;…`
 - Add attributes with no value `$element->setAttribute($attrName)`
 - Boolean values: `true` renders the attribute without value (`disabled="disabled"` in XHTML mode), `false` omits it.
   `aria-*` and `data-*` render `"true"` / `"false"`

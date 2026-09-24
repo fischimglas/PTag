@@ -332,4 +332,81 @@ class ElementTest extends TestCase
         self::assertEquals('<keygen></keygen>', (new Element('keygen'))->serialize());
         self::assertEquals('<command></command>', (new Element('command'))->serialize());
     }
+
+    public function testRemoveValuelessAttribute()
+    {
+        $e = (new Element('div'))->setAttribute('uk-img')->setAttribute('id', 'x');
+        $e->removeAttribute('uk-img');
+
+        self::assertEquals('<div id="x"></div>', $e->serialize());
+    }
+
+    public function testNonStringClassValues()
+    {
+        $stringable = new class {
+            public function __toString(): string
+            {
+                return 'from-object';
+            }
+        };
+
+        self::assertEquals('<div></div>', (new Element('div', ['class' => false]))->serialize());
+        self::assertEquals('<div></div>', (new Element('div', ['class' => true]))->serialize());
+        self::assertEquals('<div></div>', (new Element('div', ['class' => new stdClass()]))->serialize());
+        self::assertEquals('<div class="from-object a"></div>', (new Element('div', ['class' => [$stringable, 'a', false]]))->serialize());
+    }
+
+    public function testStyleAttributeAndSetStyleAreMerged()
+    {
+        $e = new Element('div', ['style' => 'color:red;', 'id' => 'x']);
+        $e->setStyle('margin', 0);
+        self::assertEquals('<div id="x" style="color:red;margin:0"></div>', $e->serialize());
+
+        $e = new Element('div', ['style' => ['color' => 'red']]);
+        $e->setStyle('margin', 0);
+        self::assertEquals('<div style="color:red;margin:0"></div>', $e->serialize());
+    }
+
+    public function testStringableAndUnencodableContent()
+    {
+        $stringable = new class {
+            public function __toString(): string
+            {
+                return 'text';
+            }
+        };
+        $unencodable = new stdClass();
+        $unencodable->a = NAN;
+
+        self::assertEquals('<p>text</p>', (new Element('p', [], $stringable))->serialize());
+        self::assertEquals('<p></p>', (new Element('p', [], $unencodable))->serialize());
+    }
+
+    public function testClassNamedZero()
+    {
+        self::assertEquals('<div class="0 a"></div>', (new Element('div'))->addClass('0 a')->serialize());
+    }
+
+    public function testArrayAttributeValues()
+    {
+        $e = new Element('div', [
+            'style' => ['margin' => [0, 'auto']],
+            'rel' => ['noopener', 'noreferrer'],
+            'data-x' => ['a' => ['b', 'c']],
+        ]);
+
+        self::assertEquals('<div rel="noopener noreferrer" data-x="a:b c" style="margin:0 auto"></div>', $e->serialize());
+    }
+
+    public function testInvalidModeKeepsCurrentMode()
+    {
+        try {
+            ElementCf::setMode('xhtml');
+            self::fail('Expected InvalidArgumentException');
+        } catch (\InvalidArgumentException) {
+        }
+
+        self::assertEquals(ElementCf::MODE_HTML5, ElementCf::$mode);
+        self::assertEquals('<br>', (new Element('br'))->serialize());
+    }
 }
