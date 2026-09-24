@@ -71,6 +71,20 @@ class Element implements SerializeableInterface
     }
 
     /**
+     * Add text content, HTML special characters are escaped (use add() for raw HTML)
+     * @param mixed $text string, number, Stringable or array of those; null and booleans add nothing
+     * @return Element
+     */
+    public function addText(mixed $text): self
+    {
+        if (!is_null($text) && !is_bool($text)) {
+            $this->content[] = htmlspecialchars($this->stringify($text), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        }
+
+        return $this;
+    }
+
+    /**
      * @param string $name
      * @param string|null $value
      * @return Element

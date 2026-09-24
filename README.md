@@ -19,6 +19,7 @@ PHP HTML abstraction, Create html elements
 - Boolean values: `true` renders the attribute without value (`disabled="disabled"` in XHTML mode), `false` omits it.
   `aria-*` and `data-*` render `"true"` / `"false"`
 - Clone elements `$element->clone()` (deep copy, child elements are cloned too)
+- Add escaped text `$element->addText($userInput)` or `HtmlFactory::text($userInput)`
 - Chain modifications `$element->clone()->add($anyContent)->addClass('test')`
 
 ### Basic example
@@ -88,8 +89,10 @@ echo HtmlFactory::div(['class' => 'a'])->setAttribute('class', 'b'); // <div cla
 
 - Attribute values and style values are escaped with `htmlentities()`.
 - Attribute names and style property names are sanitized (invalid characters are removed).
-- **Child content is not escaped.** Strings are output as raw HTML. Escape user input yourself:
+- **Child content passed to the factory or `add()` is not escaped.** Strings are output as raw HTML.
+  Use `HtmlFactory::text()` or `addText()` for user input:
 
 ```php
-echo HtmlFactory::p([], htmlspecialchars($userInput));
+echo HtmlFactory::p([], HtmlFactory::text('<b>Tom & Jerry</b>')); // <p>&lt;b&gt;Tom &amp; Jerry&lt;/b&gt;</p>
+echo HtmlFactory::p()->addText($userInput)->add('<br>');         // escaped text, raw <br>
 ```

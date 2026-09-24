@@ -428,4 +428,16 @@ class ElementTest extends TestCase
     {
         self::assertEquals('<div>0</div>', (new Element('div', [], [true, false, 0, null]))->serialize());
     }
+
+    public function testTextIsEscaped()
+    {
+        self::assertEquals(
+            '<p>&lt;b&gt;Tom &amp; Jerry&lt;/b&gt;</p>',
+            HtmlFactory::p([], HtmlFactory::text('<b>Tom & Jerry</b>'))->serialize()
+        );
+        self::assertEquals(
+            '<p>a &lt; b<br>1 2</p>',
+            HtmlFactory::p()->addText('a < b')->add('<br>')->addText([1, 2])->addText(null)->addText(false)->serialize()
+        );
+    }
 }

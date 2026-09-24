@@ -517,6 +517,14 @@ class HtmlFactory
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
+    /**
+     * Escaped text without a surrounding tag, e.g. HtmlFactory::p([], HtmlFactory::text($userInput))
+     */
+    public static function text(mixed $text): Element
+    {
+        return (new Element())->addText($text);
+    }
+
     public static function textarea(?array $attributes = [], $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
