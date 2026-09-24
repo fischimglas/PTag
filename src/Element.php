@@ -217,7 +217,10 @@ class Element implements SerializeableInterface
         $styles = array_filter($styles, fn($value) => $value !== null && $value !== '' && $value !== false);
         foreach ($styles as $key => $value) {
             if (is_array($value)) {
-                $value = $this->serializeStyle($value);
+                $value = implode(' ', array_map(
+                    fn($it) => $it instanceof SerializeableInterface ? $it->serialize() : $it . '',
+                    $value
+                ));
             } elseif ($value instanceof SerializeableInterface) {
                 $value = $value->serialize();
             }

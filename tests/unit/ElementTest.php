@@ -222,4 +222,14 @@ class ElementTest extends TestCase
 
         self::assertEquals('<div class="a 5 7"></div>', $e->serialize());
     }
+
+    public function testArrayStyleValue()
+    {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
+        $e = new Element('div');
+        $e->setStyle('margin', [0, 'auto']);
+
+        self::assertEquals('<div style="margin:0 auto"></div>', $e->serialize());
+    }
 }

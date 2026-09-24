@@ -13,7 +13,7 @@ signatures, constants). Only additive changes and fixes of clearly broken output
 | 06 | [`setTag()` does not lowercase](06-settag-lowercase.md) | fixed |
 | 07 | [Attributes of tagless elements are discarded](07-tagless-attributes.md) | fixed |
 | 08 | [Numeric CSS class names are dropped](08-numeric-classes.md) | fixed |
-| 09 | [Array style values produce invalid CSS](09-array-style-values.md) | open |
+| 09 | [Array style values produce invalid CSS](09-array-style-values.md) | fixed |
 | 10 | [Attribute / style names are not sanitized](10-unsafe-names.md) | open |
 | 11 | [Missing tags in `HtmlFactory`](11-missing-factory-tags.md) | open |
 | 12 | [`MODE_XHML` typo](12-mode-xhml-typo.md) | open |
