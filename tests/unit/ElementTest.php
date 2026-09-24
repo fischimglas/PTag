@@ -326,4 +326,10 @@ class ElementTest extends TestCase
         $e->setAttribute('class', null);
         self::assertEquals('<div></div>', $e->serialize());
     }
+
+    public function testObsoleteTagsAreNotVoid()
+    {
+        self::assertEquals('<keygen></keygen>', (new Element('keygen'))->serialize());
+        self::assertEquals('<command></command>', (new Element('command'))->serialize());
+    }
 }
