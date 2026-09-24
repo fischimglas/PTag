@@ -19,7 +19,8 @@
   },
   "scripts": {
     "test": "php vendor/bin/codecept run",
-    "tests": "@test"
+    "tests": "@test",
+    "analyse": "phpstan analyse --no-progress --memory-limit=512M"
   },
   "autoload": {
     "classmap": [
