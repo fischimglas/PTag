@@ -202,4 +202,14 @@ class ElementTest extends TestCase
         self::assertEquals('<img>', (new Element('span'))->setTag('IMG')->serialize());
         self::assertEquals('text', (new Element('span', [], 'text'))->setTag('')->serialize());
     }
+
+    public function testTaglessElementKeepsAttributes()
+    {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
+        $e = new Element(null, ['id' => 'x', 'class' => 'a'], 'content');
+
+        self::assertEquals('content', $e->serialize());
+        self::assertEquals('<div id="x" class="a">content</div>', $e->setTag('div')->serialize());
+    }
 }

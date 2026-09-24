@@ -40,9 +40,7 @@ class Element implements SerializeableInterface
     public function __construct(?string $tagName = null, ?array $attributes = [], mixed $content = null)
     {
         $this->tag = $tagName ? strtolower($tagName) : null;
-        if ($this->tag && is_array($attributes)) {
-            $this->setAttributes($attributes);
-        }
+        $this->setAttributes($attributes);
         $this->add($content);
     }
 
