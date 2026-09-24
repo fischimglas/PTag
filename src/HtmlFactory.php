@@ -47,6 +47,16 @@ class HtmlFactory
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
+    public static function b(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function base(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
     public static function bdi(?array $attributes = [], $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
@@ -67,12 +77,22 @@ class HtmlFactory
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
+    public static function br(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
     public static function button(?array $attributes = [], $children = null): Element
     {
         return new Element(__FUNCTION__, $attributes, $children);
     }
 
     public static function canvas(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function caption(?array $attributes = [], $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
@@ -98,6 +118,16 @@ class HtmlFactory
     }
 
     public static function data(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function datalist(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function dd(?array $attributes = [], $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
@@ -150,6 +180,11 @@ class HtmlFactory
     public static function empty($children = null): Element
     {
         return self::element(null, null, $children);
+    }
+
+    public static function fieldset(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
     }
 
     public static function figcaption(?array $attributes = [], $children = null): Element
@@ -217,6 +252,11 @@ class HtmlFactory
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
+    public static function hr(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
     public static function html(?array $attributes = [], $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
@@ -243,6 +283,11 @@ class HtmlFactory
     }
 
     public static function ins(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function kbd(?array $attributes = [], $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
@@ -327,6 +372,11 @@ class HtmlFactory
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
+    public static function output(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
     public static function p(?array $attributes = [], $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
@@ -343,6 +393,41 @@ class HtmlFactory
     }
 
     public static function progress(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function q(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function rp(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function rt(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function ruby(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function s(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function samp(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function script(?array $attributes = [], $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
@@ -437,6 +522,11 @@ class HtmlFactory
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
+    public static function tfoot(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
     public static function th(?array $attributes = [], $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
@@ -483,6 +573,11 @@ class HtmlFactory
     }
 
     public static function video(?array $attributes = [], $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    public static function wbr(?array $attributes = [], $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }

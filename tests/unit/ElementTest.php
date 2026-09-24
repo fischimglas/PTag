@@ -5,6 +5,7 @@ namespace unit;
 use PHPUnit\Framework\TestCase;
 use PTag\Element;
 use PTag\ElementCf;
+use PTag\HtmlFactory;
 use stdClass;
 
 class ElementTest extends TestCase
@@ -245,5 +246,17 @@ class ElementTest extends TestCase
             '<div ab="1" xonclickalert(1)="2" data-ok="4" @click="5" style="colorbackground:red;--my-var:1px"></div>',
             $e->serialize()
         );
+    }
+
+    public function testHtmlFactory()
+    {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
+        self::assertEquals('<p class="x">a<br>b<b>c</b></p>', HtmlFactory::p(['class' => 'x'], ['a', HtmlFactory::br(), 'b', HtmlFactory::b([], 'c')])->serialize());
+        self::assertEquals('<dl><dt>t</dt><dd>d</dd></dl>', HtmlFactory::dl([], [HtmlFactory::dt([], 't'), HtmlFactory::dd([], 'd')])->serialize());
+        self::assertEquals('<hr>', HtmlFactory::hr()->serialize());
+        self::assertEquals('<picture></picture>', HtmlFactory::picture()->serialize());
+        self::assertEquals('<var></var>', HtmlFactory::var()->serialize());
+        self::assertEquals('text<a></a>', HtmlFactory::empty(['text', HtmlFactory::a()])->serialize());
     }
 }
