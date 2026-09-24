@@ -232,4 +232,18 @@ class ElementTest extends TestCase
 
         self::assertEquals('<div style="margin:0 auto"></div>', $e->serialize());
     }
+
+    public function testUnsafeNamesAreSanitized()
+    {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
+        $e = new Element('div', ['a"b' => 1, 'x onclick=alert(1)' => 2, '"><' => 3, 'data-ok' => 4, '@click' => 5]);
+        $e->setStyle('color;background', 'red');
+        $e->setStyle('--my-var', '1px');
+
+        self::assertEquals(
+            '<div ab="1" xonclickalert(1)="2" data-ok="4" @click="5" style="colorbackground:red;--my-var:1px"></div>',
+            $e->serialize()
+        );
+    }
 }

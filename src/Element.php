@@ -178,6 +178,11 @@ class Element implements SerializeableInterface
         $result = [];
 
         foreach ($attributes as $key => $value) {
+            $key = $this->sanitizeAttributeName((string)$key);
+            if ($key === '') {
+                continue;
+            }
+
             if (is_bool($value) && !$this->isStringAttribute((string)$key)) {
                 if ($value === false) {
                     continue;
@@ -195,6 +200,26 @@ class Element implements SerializeableInterface
         }
 
         return implode(' ', $result);
+    }
+
+    /**
+     * Remove characters that are not allowed in attribute names (whitespace, quotes, <, >, /, =, control chars)
+     * @param string $name
+     * @return string
+     */
+    private function sanitizeAttributeName(string $name): string
+    {
+        return preg_replace('/[\s"\'<>\/=\x00-\x1F\x7F]+/u', '', $name) ?? '';
+    }
+
+    /**
+     * Allow only characters valid in CSS property names (incl. custom properties like --my-var)
+     * @param string $name
+     * @return string
+     */
+    private function sanitizeStyleName(string $name): string
+    {
+        return preg_replace('/[^a-zA-Z0-9_-]+/', '', $name) ?? '';
     }
 
     /**
@@ -216,6 +241,11 @@ class Element implements SerializeableInterface
         $result = [];
         $styles = array_filter($styles, fn($value) => $value !== null && $value !== '' && $value !== false);
         foreach ($styles as $key => $value) {
+            $key = $this->sanitizeStyleName((string)$key);
+            if ($key === '') {
+                continue;
+            }
+
             if (is_array($value)) {
                 $value = implode(' ', array_map(
                     fn($it) => $it instanceof SerializeableInterface ? $it->serialize() : $it . '',
