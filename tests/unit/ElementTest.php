@@ -259,4 +259,15 @@ class ElementTest extends TestCase
         self::assertEquals('<var></var>', HtmlFactory::var()->serialize());
         self::assertEquals('text<a></a>', HtmlFactory::empty(['text', HtmlFactory::a()])->serialize());
     }
+
+    public function testXhtmlModeConstants()
+    {
+        self::assertSame(ElementCf::MODE_XHML, ElementCf::MODE_XHTML);
+
+        ElementCf::setMode(ElementCf::MODE_XHTML);
+        self::assertEquals('<br />', (new Element('br'))->serialize());
+
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+        self::assertEquals('<br>', (new Element('br'))->serialize());
+    }
 }

@@ -6,7 +6,9 @@ namespace PTag;
 class ElementCf
 {
     public const MODE_HTML5 = 'html5';
-    public const MODE_XHML = 'xhml';
+    public const MODE_XHTML = 'xhml';
+    /** @deprecated use MODE_XHTML (kept for backwards compatibility) */
+    public const MODE_XHML = self::MODE_XHTML;
 
     public static string $mode = self::MODE_HTML5;
     public static bool $trailingSlashesForVoidElements = false;
@@ -17,7 +19,7 @@ class ElementCf
         self::$mode = $mode;
         match ($mode) {
             self::MODE_HTML5 => self::configureModeHtml5(),
-            self::MODE_XHML => self::configureModeXhtml()
+            self::MODE_XHTML => self::configureModeXhtml()
         };
     }
 

@@ -16,7 +16,7 @@ signatures, constants). Only additive changes and fixes of clearly broken output
 | 09 | [Array style values produce invalid CSS](09-array-style-values.md) | fixed |
 | 10 | [Attribute / style names are not sanitized](10-unsafe-names.md) | fixed |
 | 11 | [Missing tags in `HtmlFactory`](11-missing-factory-tags.md) | fixed |
-| 12 | [`MODE_XHML` typo](12-mode-xhml-typo.md) | open |
+| 12 | [`MODE_XHML` typo](12-mode-xhml-typo.md) | fixed |
 | 13 | [README errors and missing escaping note](13-readme.md) | open |
 | 14 | [Test coverage gaps](14-tests.md) | open |
 | 15 | [Outdated CI action](15-ci-cache-action.md) | open |
