@@ -409,4 +409,23 @@ class ElementTest extends TestCase
         self::assertEquals(ElementCf::MODE_HTML5, ElementCf::$mode);
         self::assertEquals('<br>', (new Element('br'))->serialize());
     }
+
+    public function testGetClasses()
+    {
+        self::assertSame([], (new Element('div'))->getClasses());
+        self::assertSame(['a', 'b'], (new Element('div', ['class' => 'a  b']))->getClasses());
+        self::assertSame([], (new Element('div', ['class' => 'a']))->removeClass('a')->getClasses());
+    }
+
+    public function testNonAsciiAttributeValuesAreNotEntityEncoded()
+    {
+        $e = new Element('a', ['title' => 'Grüße € <&> \'x\'']);
+
+        self::assertEquals('<a title="Grüße € &lt;&amp;&gt; &#039;x&#039;"></a>', $e->serialize());
+    }
+
+    public function testBooleanContentRendersNothing()
+    {
+        self::assertEquals('<div>0</div>', (new Element('div', [], [true, false, 0, null]))->serialize());
+    }
 }

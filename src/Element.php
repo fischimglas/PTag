@@ -132,7 +132,7 @@ class Element implements SerializeableInterface
      */
     public function getClasses(): array
     {
-        return explode(' ', $this->attributes['class'] ?? '');
+        return array_values(array_filter(explode(' ', (string)($this->attributes['class'] ?? '')), fn($it) => $it !== ''));
     }
 
     public function __toString(): string
@@ -191,7 +191,17 @@ class Element implements SerializeableInterface
             return $this->serializeStyle($value);
         }
 
-        return rtrim(trim(htmlentities(is_bool($value) ? '' : $this->stringify($value))), ';');
+        return rtrim(trim($this->escape(is_bool($value) ? '' : $this->stringify($value))), ';');
+    }
+
+    /**
+     * Escape special characters (& < > " ') for use in attribute values. Other characters are left as they are.
+     * @param string $value
+     * @return string
+     */
+    private function escape(string $value): string
+    {
+        return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     /**
@@ -255,7 +265,7 @@ class Element implements SerializeableInterface
                 $value = $this->stringify($value);
             }
 
-            $result[] = $value === null && ElementCf::$attributeMinimization ? $key : $key . '="' . htmlentities($value ?? '') . '"';
+            $result[] = $value === null && ElementCf::$attributeMinimization ? $key : $key . '="' . $this->escape($value ?? '') . '"';
         }
 
         return implode(' ', $result);
@@ -305,7 +315,7 @@ class Element implements SerializeableInterface
                 continue;
             }
 
-            $result[] = $key . ':' . htmlentities($this->stringify($value));
+            $result[] = $key . ':' . $this->escape($this->stringify($value));
         }
 
         return implode(';', $result);
@@ -317,9 +327,9 @@ class Element implements SerializeableInterface
      */
     private function serializeContent(mixed $elements): string
     {
-        if (is_null($elements)) {
+        if (is_null($elements) || is_bool($elements)) {
             return '';
-        } elseif (is_string($elements) || is_bool($elements) || is_numeric($elements)) {
+        } elseif (is_string($elements) || is_numeric($elements)) {
             return $elements . '';
         } elseif ($elements instanceof SerializeableInterface) {
             return $elements->serialize();
