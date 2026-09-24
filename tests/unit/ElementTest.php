@@ -156,4 +156,24 @@ class ElementTest extends TestCase
 
         self::assertEquals('<div style="opacity:0;margin:0"></div>', $e->serialize());
     }
+
+    public function testBooleanAttributesHtml5()
+    {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+
+        $e = new Element('input', ['disabled' => true, 'checked' => false, 'aria-hidden' => true, 'data-x' => false]);
+
+        self::assertEquals('<input disabled aria-hidden="1" data-x="">', $e->serialize());
+    }
+
+    public function testBooleanAttributesXhtml()
+    {
+        ElementCf::setMode(ElementCf::MODE_XHML);
+
+        $e = new Element('input', ['disabled' => true, 'checked' => false]);
+
+        self::assertEquals('<input disabled="" />', $e->serialize());
+
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+    }
 }

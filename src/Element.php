@@ -171,7 +171,8 @@ class Element implements SerializeableInterface
      * - Adds only the attribute name if the value is null
      * - Minimize attributes if value is null and HTML5 mode
      * - If attribute value is an array, serialize it, assuming it's css style
-     * * @param array $attributes
+     * - Boolean values: true behaves like null, false omits the attribute (except aria-* and data-*)
+     * @param array $attributes
      * @return string
      */
     private function serializeAttributes(array $attributes): string
@@ -179,6 +180,13 @@ class Element implements SerializeableInterface
         $result = [];
 
         foreach ($attributes as $key => $value) {
+            if (is_bool($value) && !$this->isStringAttribute((string)$key)) {
+                if ($value === false) {
+                    continue;
+                }
+                $value = null;
+            }
+
             if (is_array($value)) {
                 $value = implode(';', array_map(fn($vKey, $vValue) => "$vKey:$vValue", array_keys($value), $value));
             } elseif ($value instanceof SerializeableInterface) {
@@ -189,6 +197,16 @@ class Element implements SerializeableInterface
         }
 
         return implode(' ', $result);
+    }
+
+    /**
+     * aria-* and data-* attributes carry string values, booleans are not treated as HTML boolean attributes
+     * @param string $name
+     * @return bool
+     */
+    private function isStringAttribute(string $name): bool
+    {
+        return str_starts_with($name, 'aria-') || str_starts_with($name, 'data-');
     }
 
     /**
