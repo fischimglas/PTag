@@ -24,6 +24,8 @@ The public API is unchanged (only additions), but the generated HTML differs in 
 - `true` / `false` as child content render nothing
 - `command` and `keygen` are no longer void elements
 - `ElementCf::setMode()` with an unknown mode throws `InvalidArgumentException` and keeps the current mode
+- Invalid tag names (e.g. containing spaces, quotes or `<>`) throw `InvalidArgumentException`
+  in the constructor, `HtmlFactory::element()` and `setTag()`; custom elements like `my-widget` are allowed
 
 ### Fixed
 - `clone()` is a deep copy, child elements are no longer shared

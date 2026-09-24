@@ -35,12 +35,13 @@ class Element implements SerializeableInterface
 
     /**
      * @param string|null $tagName tag name, null for a container without tag (only the content is rendered)
+     * @throws \InvalidArgumentException if the name contains characters that are not allowed in tag names
      * @param array<array-key, mixed>|null $attributes see setAttributes()
      * @param mixed $content see add()
      */
     public function __construct(?string $tagName = null, ?array $attributes = [], mixed $content = null)
     {
-        $this->tag = $tagName ? strtolower($tagName) : null;
+        $this->tag = $this->normalizeTagName($tagName);
         $this->setAttributes($attributes);
         $this->add($content);
     }
@@ -509,12 +510,31 @@ class Element implements SerializeableInterface
     }
 
     /**
+     * Lowercase the tag name; null or '' means no tag
+     * @param string|null $tagName
+     * @return string|null
+     * @throws \InvalidArgumentException if the name contains characters that are not allowed in tag names
+     */
+    private function normalizeTagName(?string $tagName): ?string
+    {
+        if ($tagName === null || $tagName === '') {
+            return null;
+        }
+        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9._:-]*$/', $tagName)) {
+            throw new \InvalidArgumentException(sprintf('Invalid tag name "%s"', $tagName));
+        }
+
+        return strtolower($tagName);
+    }
+
+    /**
      * @param string|null $tagName null or '' removes the tag (only the content is rendered)
      * @return Element
+     * @throws \InvalidArgumentException if the name contains characters that are not allowed in tag names
      */
     public function setTag(?string $tagName = null): self
     {
-        $this->tag = $tagName ? strtolower($tagName) : null;
+        $this->tag = $this->normalizeTagName($tagName);
 
         return $this;
     }

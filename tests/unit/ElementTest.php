@@ -446,4 +446,30 @@ class ElementTest extends TestCase
         self::assertEquals('<input required type="text">', HtmlFactory::input(['required', 'type' => 'text'])->serialize());
         self::assertEquals('<input>', HtmlFactory::input([5 => null, 6 => ''])->serialize());
     }
+
+    public function testValidTagNames()
+    {
+        self::assertEquals('<my-widget>x</my-widget>', HtmlFactory::element('my-widget', [], 'x')->serialize());
+        self::assertEquals('<svg:rect></svg:rect>', HtmlFactory::element('svg:rect')->serialize());
+        self::assertEquals('<h1></h1>', HtmlFactory::element('H1')->serialize());
+        self::assertEquals('x', HtmlFactory::element('', [], 'x')->serialize());
+    }
+
+    public function testInvalidTagNamesThrow()
+    {
+        foreach (['div onclick=alert(1)', '1div', 'div>', '<div', 'di"v', '-x'] as $name) {
+            try {
+                new Element($name);
+                self::fail('Expected InvalidArgumentException for ' . $name);
+            } catch (\InvalidArgumentException) {
+            }
+
+            try {
+                (new Element('div'))->setTag($name);
+                self::fail('Expected InvalidArgumentException in setTag() for ' . $name);
+            } catch (\InvalidArgumentException) {
+            }
+        }
+        self::assertTrue(true);
+    }
 }
