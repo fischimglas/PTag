@@ -27,8 +27,12 @@
     ]
   },
   "require-dev": {
-    "codeception/codeception": "^4.1",
-    "codeception/module-phpbrowser": "^1.0.0",
-    "codeception/module-asserts": "^1.0.0"
+    "codeception/codeception": "^5.1",
+    "codeception/module-asserts": "^3.0"
+  },
+  "config": {
+    "platform": {
+      "php": "8.1.0"
+    }
   }
 }
