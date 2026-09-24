@@ -1,7 +1,6 @@
 {
   "name": "fischimglas/ptag",
   "description": "PHP HTML abstraction, Create html elements",
-  "version": "1.0.5",
   "type": "library",
   "license": "MIT",
   "minimum-stability": "dev",
@@ -19,7 +18,8 @@
     "ext-json": "*"
   },
   "scripts": {
-    "tests": "php vendor/bin/codecept run"
+    "test": "php vendor/bin/codecept run",
+    "tests": "@test"
   },
   "autoload": {
     "classmap": [
