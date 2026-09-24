@@ -10,6 +10,11 @@ use stdClass;
 
 class ElementTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        ElementCf::setMode(ElementCf::MODE_HTML5);
+    }
+
     public function testDuplicateCssClass()
     {
         ElementCf::setMode(ElementCf::MODE_HTML5);
@@ -269,5 +274,42 @@ class ElementTest extends TestCase
 
         ElementCf::setMode(ElementCf::MODE_HTML5);
         self::assertEquals('<br>', (new Element('br'))->serialize());
+    }
+
+    public function testSetAndRemoveStyle()
+    {
+        $e = new Element('div');
+        $e->setStyle('color', 'red')->setStyle('background', 'blue')->setStyle('border', null);
+        $e->removeStyle('color');
+        $e->removeStyle(null);
+
+        self::assertEquals('<div style="background:blue"></div>', $e->serialize());
+    }
+
+    public function testNullArgumentsAreIgnored()
+    {
+        $e = new Element('div', null, null);
+        $e->setAttributes(null)->add(null)->addClass(null)->removeClass(null)->removeAttribute(null);
+
+        self::assertEquals('<div></div>', $e->serialize());
+    }
+
+    public function testNestedClassArraysAndChaining()
+    {
+        $e = (new Element('div'))
+            ->addClass(['a', ['b', ['c']]])
+            ->addClass('c d')
+            ->removeClass('a')
+            ->setAttribute('tabindex', 1)
+            ->setAttribute('hidden');
+
+        self::assertEquals('<div class="b c d" tabindex="1" hidden></div>', $e->serialize());
+    }
+
+    public function testAttributeValuesAreEscaped()
+    {
+        $e = new Element('a', ['title' => '"><script>']);
+
+        self::assertEquals('<a title="&quot;&gt;&lt;script&gt;"></a>', $e->serialize());
     }
 }

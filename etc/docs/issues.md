@@ -18,5 +18,5 @@ signatures, constants). Only additive changes and fixes of clearly broken output
 | 11 | [Missing tags in `HtmlFactory`](11-missing-factory-tags.md) | fixed |
 | 12 | [`MODE_XHML` typo](12-mode-xhml-typo.md) | fixed |
 | 13 | [README errors and missing escaping note](13-readme.md) | fixed |
-| 14 | [Test coverage gaps](14-tests.md) | open |
+| 14 | [Test coverage gaps](14-tests.md) | fixed |
 | 15 | [Outdated CI action](15-ci-cache-action.md) | open |
