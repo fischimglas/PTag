@@ -173,7 +173,8 @@ class Element implements SerializeableInterface
      * - Adds only the attribute name if the value is null
      * - Minimize attributes if value is null and HTML5 mode
      * - If attribute value is an array, serialize it, assuming it's css style
-     * - Boolean values: true behaves like null, false omits the attribute (except aria-* and data-*)
+     * - Boolean values: false omits the attribute, true renders it minimized (HTML5) or as name="name" (XHTML)
+     * - aria-* and data-* booleans render as "true" / "false"
      * @param array $attributes
      * @return string
      */
@@ -187,11 +188,14 @@ class Element implements SerializeableInterface
                 continue;
             }
 
-            if (is_bool($value) && !$this->isStringAttribute((string)$key)) {
-                if ($value === false) {
+            if (is_bool($value)) {
+                if ($this->isStringAttribute($key)) {
+                    $value = $value ? 'true' : 'false';
+                } elseif ($value === false) {
                     continue;
+                } else {
+                    $value = ElementCf::$attributeMinimization ? null : $key;
                 }
-                $value = null;
             }
 
             if (is_array($value)) {
@@ -227,7 +231,7 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * aria-* and data-* attributes carry string values, booleans are not treated as HTML boolean attributes
+     * aria-* and data-* attributes carry string values, booleans render as "true" / "false"
      * @param string $name
      * @return bool
      */

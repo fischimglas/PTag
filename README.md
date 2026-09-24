@@ -13,7 +13,8 @@ PHP HTML abstraction, Create html elements
 - Set `$element->setAttribute($attrName,$attrValue)` and remove `$element->removeAttribute($attrName)` attributes
 - Set `$element->setStyle($styleName,$styleValue)` and remove `$element->removeStyle($styleName)` inline styles
 - Add attributes with no value `$element->setAttribute($attrName)`
-- Boolean values: `true` renders the attribute without value, `false` omits it (`aria-*` and `data-*` keep `"1"` / `""`)
+- Boolean values: `true` renders the attribute without value (`disabled="disabled"` in XHTML mode), `false` omits it.
+  `aria-*` and `data-*` render `"true"` / `"false"`
 - Clone elements `$element->clone()` (deep copy, child elements are cloned too)
 - Chain modifications `$element->clone()->add($anyContent)->addClass('test')`
 

@@ -169,7 +169,7 @@ class ElementTest extends TestCase
 
         $e = new Element('input', ['disabled' => true, 'checked' => false, 'aria-hidden' => true, 'data-x' => false]);
 
-        self::assertEquals('<input disabled aria-hidden="1" data-x="">', $e->serialize());
+        self::assertEquals('<input disabled aria-hidden="true" data-x="false">', $e->serialize());
     }
 
     public function testBooleanAttributesXhtml()
@@ -178,7 +178,7 @@ class ElementTest extends TestCase
 
         $e = new Element('input', ['disabled' => true, 'checked' => false]);
 
-        self::assertEquals('<input disabled="" />', $e->serialize());
+        self::assertEquals('<input disabled="disabled" />', $e->serialize());
 
         ElementCf::setMode(ElementCf::MODE_HTML5);
     }
