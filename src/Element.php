@@ -1,6 +1,6 @@
 <?php
 /**
- * HTMl Element
+ * HTML Element
  */
 declare(strict_types=1);
 
@@ -25,15 +25,18 @@ class Element implements SerializeableInterface
         'wbr',
     ];
 
+    /** @var array<string, mixed> */
     private array $attributes = [];
+    /** @var array<string, mixed> */
     private array $style = [];
+    /** @var list<mixed> */
     private array $content = [];
     private ?string $tag;
 
     /**
-     * @param string|null $tagName
-     * @param array|null $attributes
-     * @param mixed $content
+     * @param string|null $tagName tag name, null for a container without tag (only the content is rendered)
+     * @param array<array-key, mixed>|null $attributes see setAttributes()
+     * @param mixed $content see add()
      */
     public function __construct(?string $tagName = null, ?array $attributes = [], mixed $content = null)
     {
@@ -43,13 +46,21 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param array|null $attributes
+     * Set several attributes. List entries without key are attributes without value:
+     * ['required', 'type' => 'text'] renders required type="text"
+     * @param array<array-key, mixed>|null $attributes
      * @return Element
      */
     public function setAttributes(?array $attributes = []): self
     {
         if (!is_null($attributes)) {
             foreach ($attributes as $key => $value) {
+                if (is_int($key)) {
+                    if (is_string($value) && $value !== '') {
+                        $this->setAttribute($value);
+                    }
+                    continue;
+                }
                 $this->setAttribute($key, $value);
             }
         }
@@ -58,7 +69,9 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param null $content
+     * Add child content, rendered as raw HTML (use addText() for escaped text).
+     * Accepts elements, strings, numbers, Stringable objects and (nested) arrays of those; null is ignored.
+     * @param mixed $content
      * @return Element
      */
     public function add(mixed $content = null): self
@@ -78,15 +91,20 @@ class Element implements SerializeableInterface
     public function addText(mixed $text): self
     {
         if (!is_null($text) && !is_bool($text)) {
-            $this->content[] = htmlspecialchars($this->stringify($text), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $this->content[] = $this->escape($this->stringify($text));
         }
 
         return $this;
     }
 
     /**
+     * Set an attribute, replacing an existing value.
+     * - null: attribute without value
+     * - bool: see serializeAttributes()
+     * - array: list joined with spaces, associative array as key:value;key:value
+     * - 'class': string, number, Stringable or (nested) array of class names; empty removes the attribute
      * @param string $name
-     * @param string|null $value
+     * @param mixed $value
      * @return Element
      */
     public function setAttribute(string $name, mixed $value = null): self
@@ -122,11 +140,20 @@ class Element implements SerializeableInterface
         return implode(' ', array_unique($classes));
     }
 
+    /**
+     * @param mixed $value
+     * @return bool
+     * @phpstan-assert-if-true string|int|float|\Stringable $value
+     */
     private function isClassName(mixed $value): bool
     {
         return is_string($value) || is_int($value) || is_float($value) || $value instanceof \Stringable;
     }
 
+    /**
+     * @param array<array-key, mixed> $array
+     * @return list<string>
+     */
     private function flattenNestedArray(array $array): array
     {
         $result = [];
@@ -142,11 +169,11 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @return array
+     * @return list<string>
      */
     public function getClasses(): array
     {
-        return array_values(array_filter(explode(' ', (string)($this->attributes['class'] ?? '')), fn($it) => $it !== ''));
+        return array_values(array_filter(explode(' ', $this->stringify($this->attributes['class'] ?? '')), fn($it) => $it !== ''));
     }
 
     public function __toString(): string
@@ -246,7 +273,7 @@ class Element implements SerializeableInterface
      * - Array values: lists are joined with spaces, associative arrays become key:value;key:value
      * - Boolean values: false omits the attribute, true renders it minimized (HTML5) or as name="name" (XHTML)
      * - aria-* and data-* booleans render as "true" / "false"
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      * @return string
      */
     private function serializeAttributes(array $attributes): string
@@ -316,7 +343,7 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param array $styles
+     * @param array<array-key, mixed> $styles
      * @return string
      */
     private function serializeStyle(array $styles): string
@@ -367,7 +394,8 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param string|array|null $className
+     * Add classes to the existing ones, duplicates are removed
+     * @param string|array<array-key, mixed>|null $className space separated string or (nested) array of class names
      * @return Element
      */
     public function addClass(null|string|array $className): self
@@ -379,6 +407,9 @@ class Element implements SerializeableInterface
         return $this;
     }
 
+    /**
+     * @return Element deep copy, see __clone()
+     */
     public function clone(): self
     {
         return clone $this;
@@ -389,9 +420,13 @@ class Element implements SerializeableInterface
      */
     public function __clone(): void
     {
-        $this->content = $this->cloneContent($this->content);
+        $this->content = array_map(fn($it) => $this->cloneContent($it), $this->content);
     }
 
+    /**
+     * @param mixed $content
+     * @return mixed
+     */
     private function cloneContent(mixed $content): mixed
     {
         if ($content instanceof self) {
@@ -404,8 +439,8 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param string|array|null $className
-     * @return $this
+     * @param string|array<array-key, string>|null $className space separated string or array of class names
+     * @return Element
      */
     public function removeClass(null|string|array $className = null): self
     {
@@ -459,8 +494,9 @@ class Element implements SerializeableInterface
     }
 
     /**
+     * Set an inline style. null is ignored; arrays are joined with spaces: ['margin', [0, 'auto']] renders margin:0 auto
      * @param string $name
-     * @param string $value
+     * @param mixed $value
      * @return Element
      */
     public function setStyle(string $name, mixed $value): self
@@ -473,8 +509,8 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param string|null $tagName
-     * @return $this
+     * @param string|null $tagName null or '' removes the tag (only the content is rendered)
+     * @return Element
      */
     public function setTag(?string $tagName = null): self
     {

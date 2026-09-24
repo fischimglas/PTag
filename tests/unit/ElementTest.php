@@ -440,4 +440,10 @@ class ElementTest extends TestCase
             HtmlFactory::p()->addText('a < b')->add('<br>')->addText([1, 2])->addText(null)->addText(false)->serialize()
         );
     }
+
+    public function testListEntriesAreValuelessAttributes()
+    {
+        self::assertEquals('<input required type="text">', HtmlFactory::input(['required', 'type' => 'text'])->serialize());
+        self::assertEquals('<input>', HtmlFactory::input([5 => null, 6 => ''])->serialize());
+    }
 }

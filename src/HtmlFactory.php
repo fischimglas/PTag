@@ -7,512 +7,1022 @@ namespace PTag;
 class HtmlFactory
 {
 
-    public static function a(?array $attributes = [], $children = null): Element
+    /**
+     * <a> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function a(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function element(?string $elementName = null, ?array $attributes = [], $children = null): Element
+    /**
+     * Create any element, e.g. HtmlFactory::element('custom-tag', ['id' => 'x'], 'content')
+     * @param string|null $elementName
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function element(?string $elementName = null, ?array $attributes = [], mixed $children = null): Element
     {
         return new Element($elementName, $attributes, $children);
     }
 
-    public static function abbr(?array $attributes = [], $children = null): Element
+    /**
+     * <abbr> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function abbr(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function address(?array $attributes = [], $children = null): Element
+    /**
+     * <address> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function address(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function area(?array $attributes = [], $children = null): Element
+    /**
+     * <area> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function area(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function article(?array $attributes = [], $children = null): Element
+    /**
+     * <article> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function article(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function aside(?array $attributes = [], $children = null): Element
+    /**
+     * <aside> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function aside(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function audio(?array $attributes = [], $children = null): Element
+    /**
+     * <audio> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function audio(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function b(?array $attributes = [], $children = null): Element
+    /**
+     * <b> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function b(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function base(?array $attributes = [], $children = null): Element
+    /**
+     * <base> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function base(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function bdi(?array $attributes = [], $children = null): Element
+    /**
+     * <bdi> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function bdi(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function bdo(?array $attributes = [], $children = null): Element
+    /**
+     * <bdo> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function bdo(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function blockquote(?array $attributes = [], $children = null): Element
+    /**
+     * <blockquote> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function blockquote(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function body(?array $attributes = [], $children = null): Element
+    /**
+     * <body> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function body(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function br(?array $attributes = [], $children = null): Element
+    /**
+     * <br> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function br(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function button(?array $attributes = [], $children = null): Element
+    /**
+     * <button> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function button(?array $attributes = [], mixed $children = null): Element
     {
         return new Element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function canvas(?array $attributes = [], $children = null): Element
+    /**
+     * <canvas> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function canvas(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function caption(?array $attributes = [], $children = null): Element
+    /**
+     * <caption> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function caption(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function cite(?array $attributes = [], $children = null): Element
+    /**
+     * <cite> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function cite(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function code(?array $attributes = [], $children = null): Element
+    /**
+     * <code> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function code(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function col(?array $attributes = [], $children = null): Element
+    /**
+     * <col> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function col(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function colgroup(?array $attributes = [], $children = null): Element
+    /**
+     * <colgroup> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function colgroup(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function data(?array $attributes = [], $children = null): Element
+    /**
+     * <data> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function data(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function datalist(?array $attributes = [], $children = null): Element
+    /**
+     * <datalist> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function datalist(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function dd(?array $attributes = [], $children = null): Element
+    /**
+     * <dd> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function dd(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function del(?array $attributes = [], $children = null): Element
+    /**
+     * <del> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function del(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function details(?array $attributes = [], $children = null): Element
+    /**
+     * <details> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function details(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function dfn(?array $attributes = [], $children = null): Element
+    /**
+     * <dfn> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function dfn(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function dialog(?array $attributes = [], $children = null): Element
+    /**
+     * <dialog> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function dialog(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function div(?array $attributes = [], $children = null): Element
+    /**
+     * <div> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function div(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function dl(?array $attributes = [], $children = null): Element
+    /**
+     * <dl> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function dl(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function dt(?array $attributes = [], $children = null): Element
+    /**
+     * <dt> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function dt(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function em(?array $attributes = [], $children = null): Element
+    /**
+     * <em> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function em(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function embed(?array $attributes = [], $children = null): Element
+    /**
+     * <embed> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function embed(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function empty($children = null): Element
+    /**
+     * Container without tag, only the children are rendered
+     * @param mixed $children see Element::add()
+     */
+    public static function empty(mixed $children = null): Element
     {
         return self::element(null, null, $children);
     }
 
-    public static function fieldset(?array $attributes = [], $children = null): Element
+    /**
+     * <fieldset> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function fieldset(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function figcaption(?array $attributes = [], $children = null): Element
+    /**
+     * <figcaption> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function figcaption(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function figure(?array $attributes = [], $children = null): Element
+    /**
+     * <figure> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function figure(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function footer(?array $attributes = [], $children = null): Element
+    /**
+     * <footer> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function footer(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function form(?array $attributes = [], $children = null): Element
+    /**
+     * <form> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function form(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function h1(?array $attributes = [], $children = null): Element
+    /**
+     * <h1> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function h1(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function h2(?array $attributes = [], $children = null): Element
+    /**
+     * <h2> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function h2(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function h3(?array $attributes = [], $children = null): Element
+    /**
+     * <h3> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function h3(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function h4(?array $attributes = [], $children = null): Element
+    /**
+     * <h4> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function h4(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function h5(?array $attributes = [], $children = null): Element
+    /**
+     * <h5> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function h5(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function h6(?array $attributes = [], $children = null): Element
+    /**
+     * <h6> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function h6(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function head(?array $attributes = [], $children = null): Element
+    /**
+     * <head> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function head(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function header(?array $attributes = [], $children = null): Element
+    /**
+     * <header> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function header(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function hgroup(?array $attributes = [], $children = null): Element
+    /**
+     * <hgroup> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function hgroup(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function hr(?array $attributes = [], $children = null): Element
+    /**
+     * <hr> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function hr(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function html(?array $attributes = [], $children = null): Element
+    /**
+     * <html> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function html(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function i(?array $attributes = [], $children = null): Element
+    /**
+     * <i> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function i(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function iframe(?array $attributes = [], $children = null): Element
+    /**
+     * <iframe> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function iframe(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function img(?array $attributes = [], $children = null): Element
+    /**
+     * <img> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function img(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function input(?array $attributes = [], $children = null): Element
+    /**
+     * <input> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function input(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function ins(?array $attributes = [], $children = null): Element
+    /**
+     * <ins> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function ins(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function kbd(?array $attributes = [], $children = null): Element
+    /**
+     * <kbd> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function kbd(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function label(?array $attributes = [], $children = null): Element
+    /**
+     * <label> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function label(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function legend(?array $attributes = [], $children = null): Element
+    /**
+     * <legend> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function legend(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function li(?array $attributes = [], $children = null): Element
+    /**
+     * <li> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function li(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function link(?array $attributes = [], $children = null): Element
+    /**
+     * <link> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function link(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function main(?array $attributes = [], $children = null): Element
+    /**
+     * <main> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function main(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function map(?array $attributes = [], $children = null): Element
+    /**
+     * <map> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function map(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function mark(?array $attributes = [], $children = null): Element
+    /**
+     * <mark> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function mark(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function menu(?array $attributes = [], $children = null): Element
+    /**
+     * <menu> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function menu(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function meta(?array $attributes = [], $children = null): Element
+    /**
+     * <meta> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function meta(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function meter(?array $attributes = [], $children = null): Element
+    /**
+     * <meter> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function meter(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function nav(?array $attributes = [], $children = null): Element
+    /**
+     * <nav> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function nav(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function noscript(?array $attributes = [], $children = null): Element
+    /**
+     * <noscript> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function noscript(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function object(?array $attributes = [], $children = null): Element
+    /**
+     * <object> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function object(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function ol(?array $attributes = [], $children = null): Element
+    /**
+     * <ol> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function ol(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function optgroup(?array $attributes = [], $children = null): Element
+    /**
+     * <optgroup> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function optgroup(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function option(?array $attributes = [], $children = null): Element
+    /**
+     * <option> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function option(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function output(?array $attributes = [], $children = null): Element
+    /**
+     * <output> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function output(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function p(?array $attributes = [], $children = null): Element
+    /**
+     * <p> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function p(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function picture(?array $attributes = [], $children = null): Element
+    /**
+     * <picture> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function picture(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function pre(?array $attributes = [], $children = null): Element
+    /**
+     * <pre> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function pre(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function progress(?array $attributes = [], $children = null): Element
+    /**
+     * <progress> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function progress(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function q(?array $attributes = [], $children = null): Element
+    /**
+     * <q> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function q(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function rp(?array $attributes = [], $children = null): Element
+    /**
+     * <rp> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function rp(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function rt(?array $attributes = [], $children = null): Element
+    /**
+     * <rt> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function rt(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function ruby(?array $attributes = [], $children = null): Element
+    /**
+     * <ruby> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function ruby(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function s(?array $attributes = [], $children = null): Element
+    /**
+     * <s> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function s(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function samp(?array $attributes = [], $children = null): Element
+    /**
+     * <samp> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function samp(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function script(?array $attributes = [], $children = null): Element
+    /**
+     * <script> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function script(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function search(?array $attributes = [], $children = null): Element
+    /**
+     * <search> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function search(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function section(?array $attributes = [], $children = null): Element
+    /**
+     * <section> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function section(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function select(?array $attributes = [], $children = null): Element
+    /**
+     * <select> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function select(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function slot(?array $attributes = [], $children = null): Element
+    /**
+     * <slot> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function slot(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function small(?array $attributes = [], $children = null): Element
+    /**
+     * <small> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function small(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function source(?array $attributes = [], $children = null): Element
+    /**
+     * <source> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function source(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function span(?array $attributes = [], $children = null): Element
+    /**
+     * <span> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function span(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function strong(?array $attributes = [], $children = null): Element
+    /**
+     * <strong> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function strong(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function style(?array $attributes = [], $children = null): Element
+    /**
+     * <style> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function style(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function sub(?array $attributes = [], $children = null): Element
+    /**
+     * <sub> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function sub(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function summary(?array $attributes = [], $children = null): Element
+    /**
+     * <summary> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function summary(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function sup(?array $attributes = [], $children = null): Element
+    /**
+     * <sup> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function sup(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function svg(?array $attributes = [], $children = null): Element
+    /**
+     * <svg> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function svg(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function table(?array $attributes = [], $children = null): Element
+    /**
+     * <table> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function table(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function tbody(?array $attributes = [], $children = null): Element
+    /**
+     * <tbody> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function tbody(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function td(?array $attributes = [], $children = null): Element
+    /**
+     * <td> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function td(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function template(?array $attributes = [], $children = null): Element
+    /**
+     * <template> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function template(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
@@ -525,67 +1035,132 @@ class HtmlFactory
         return (new Element())->addText($text);
     }
 
-    public static function textarea(?array $attributes = [], $children = null): Element
+    /**
+     * <textarea> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function textarea(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function tfoot(?array $attributes = [], $children = null): Element
+    /**
+     * <tfoot> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function tfoot(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function th(?array $attributes = [], $children = null): Element
+    /**
+     * <th> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function th(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function thead(?array $attributes = [], $children = null): Element
+    /**
+     * <thead> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function thead(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function time(?array $attributes = [], $children = null): Element
+    /**
+     * <time> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function time(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function title(?array $attributes = [], $children = null): Element
+    /**
+     * <title> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function title(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function tr(?array $attributes = [], $children = null): Element
+    /**
+     * <tr> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function tr(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function track(?array $attributes = [], $children = null): Element
+    /**
+     * <track> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function track(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function u(?array $attributes = [], $children = null): Element
+    /**
+     * <u> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function u(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function ul(?array $attributes = [], $children = null): Element
+    /**
+     * <ul> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function ul(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function var(?array $attributes = [], $children = null): Element
+    /**
+     * <var> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function var(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function video(?array $attributes = [], $children = null): Element
+    /**
+     * <video> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function video(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
 
-    public static function wbr(?array $attributes = [], $children = null): Element
+    /**
+     * <wbr> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function wbr(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
