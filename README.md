@@ -72,12 +72,12 @@ Result:
 
 ### CSS classes
 
-The `class` attribute is always merged: `setAttribute('class', ...)` and `addClass(...)` add to the existing
-classes and remove duplicates. To replace the classes, call `removeAttribute('class')` first.
+`addClass(...)` adds to the existing classes, `setAttribute('class', ...)` replaces them. Duplicates are removed
+in both cases.
 
 ```php
-echo HtmlFactory::div(['class' => 'a'])->setAttribute('class', 'b');           // <div class="a b"></div>
-echo HtmlFactory::div(['class' => 'a'])->removeAttribute('class')->addClass('b'); // <div class="b"></div>
+echo HtmlFactory::div(['class' => 'a'])->addClass('b');           // <div class="a b"></div>
+echo HtmlFactory::div(['class' => 'a'])->setAttribute('class', 'b'); // <div class="b"></div>
 ```
 
 ### Escaping

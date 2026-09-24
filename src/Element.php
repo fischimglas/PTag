@@ -80,7 +80,11 @@ class Element implements SerializeableInterface
     public function setAttribute(string $name, mixed $value = null): self
     {
         if ($name === 'class') {
+            unset($this->attributes['class']);
             $value = $this->mergeCssClasses($value);
+            if ($value === '') {
+                return $this;
+            }
         }
         $this->attributes[$name] = $value;
 

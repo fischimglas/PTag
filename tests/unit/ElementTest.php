@@ -224,9 +224,10 @@ class ElementTest extends TestCase
         ElementCf::setMode(ElementCf::MODE_HTML5);
 
         $e = new Element('div', ['class' => ['a', 5]]);
-        $e->setAttribute('class', 7);
+        $e->addClass([7]);
 
         self::assertEquals('<div class="a 5 7"></div>', $e->serialize());
+        self::assertEquals('<div class="8"></div>', $e->setAttribute('class', 8)->serialize());
     }
 
     public function testArrayStyleValue()
@@ -311,5 +312,18 @@ class ElementTest extends TestCase
         $e = new Element('a', ['title' => '"><script>']);
 
         self::assertEquals('<a title="&quot;&gt;&lt;script&gt;"></a>', $e->serialize());
+    }
+
+    public function testSetAttributeClassReplaces()
+    {
+        $e = new Element('div', ['class' => 'a b']);
+        $e->setAttribute('class', ['c', 'c', 'd']);
+        self::assertEquals('<div class="c d"></div>', $e->serialize());
+
+        $e->addClass('e');
+        self::assertEquals('<div class="c d e"></div>', $e->serialize());
+
+        $e->setAttribute('class', null);
+        self::assertEquals('<div></div>', $e->serialize());
     }
 }
