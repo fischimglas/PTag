@@ -472,4 +472,105 @@ class ElementTest extends TestCase
         }
         self::assertTrue(true);
     }
+
+    public function testGetTag()
+    {
+        self::assertSame('div', (new Element('DIV'))->getTag());
+        self::assertNull((new Element())->getTag());
+        self::assertSame('span', (new Element())->setTag('span')->getTag());
+    }
+
+    public function testAttributeGetters()
+    {
+        $e = new Element('input', ['type' => 'text', 'required', 'data-x' => false]);
+
+        self::assertTrue($e->hasAttribute('type'));
+        self::assertTrue($e->hasAttribute('required'));
+        self::assertTrue($e->hasAttribute('data-x'));
+        self::assertFalse($e->hasAttribute('name'));
+        self::assertSame('text', $e->getAttribute('type'));
+        self::assertNull($e->getAttribute('required'));
+        self::assertFalse($e->getAttribute('data-x'));
+        self::assertNull($e->getAttribute('name'));
+        self::assertSame(['type' => 'text', 'required' => null, 'data-x' => false], $e->getAttributes());
+
+        $e->removeAttribute('required');
+        self::assertFalse($e->hasAttribute('required'));
+    }
+
+    public function testHasClass()
+    {
+        $e = new Element('div', ['class' => 'a b 0']);
+
+        self::assertTrue($e->hasClass('a'));
+        self::assertTrue($e->hasClass('0'));
+        self::assertFalse($e->hasClass('c'));
+        self::assertFalse($e->hasClass(''));
+    }
+
+    public function testToggleClass()
+    {
+        $e = new Element('div', ['class' => 'a']);
+
+        $e->toggleClass('b');
+        self::assertEquals('<div class="a b"></div>', $e->serialize());
+        $e->toggleClass('a');
+        self::assertEquals('<div class="b"></div>', $e->serialize());
+        $e->toggleClass('b', true);
+        self::assertEquals('<div class="b"></div>', $e->serialize());
+        $e->toggleClass('c', false);
+        self::assertEquals('<div class="b"></div>', $e->serialize());
+        $e->toggleClass('b', false);
+        self::assertEquals('<div></div>', $e->serialize());
+    }
+
+    public function testStyleGettersAndSetStyles()
+    {
+        $e = new Element('div', ['style' => 'color:red']);
+        $e->setStyles(['margin' => 0, 'padding' => null, 'border' => '1px solid'])->setStyles(null);
+
+        self::assertSame(0, $e->getStyle('margin'));
+        self::assertNull($e->getStyle('padding'));
+        self::assertSame(['margin' => 0, 'border' => '1px solid'], $e->getStyles());
+        self::assertSame('color:red', $e->getAttribute('style'));
+        self::assertEquals('<div style="color:red;margin:0;border:1px solid"></div>', $e->serialize());
+    }
+
+    public function testChildren()
+    {
+        $span = new Element('span');
+        $e = new Element('div', [], 'b');
+        $e->add([$span, 'c'])->prepend('a')->prepend(null);
+
+        self::assertSame(['a', 'b', [$span, 'c']], $e->getChildren());
+        self::assertEquals('<div>ab<span></span>c</div>', $e->serialize());
+
+        $e->clearChildren()->add('new');
+        self::assertSame(['new'], $e->getChildren());
+        self::assertEquals('<div>new</div>', $e->serialize());
+    }
+
+    public function testNewFactoryTags()
+    {
+        self::assertEquals('<math><mi>x</mi></math>', HtmlFactory::math([], HtmlFactory::element('mi', [], 'x'))->serialize());
+        self::assertEquals(
+            '<select><button><selectedcontent></selectedcontent></button></select>',
+            HtmlFactory::select([], HtmlFactory::button([], HtmlFactory::selectedcontent()))->serialize()
+        );
+    }
+
+    public function testDoctype()
+    {
+        self::assertEquals(
+            '<!DOCTYPE html><html lang="en"></html>',
+            HtmlFactory::empty([HtmlFactory::doctype(), HtmlFactory::html(['lang' => 'en'])])->serialize()
+        );
+    }
+
+    public function testComment()
+    {
+        self::assertEquals('<!-- note -->', HtmlFactory::comment('note')->serialize());
+        self::assertEquals('<!-- a - -> <script> - - - -->', HtmlFactory::comment('a --> <script> ---')->serialize());
+        self::assertEquals('<div><!-- x --></div>', HtmlFactory::div([], HtmlFactory::comment('x'))->serialize());
+    }
 }

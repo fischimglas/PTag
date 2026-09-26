@@ -538,4 +538,125 @@ class Element implements SerializeableInterface
 
         return $this;
     }
+
+    /**
+     * @return string|null lowercase tag name, null for a container without tag
+     */
+    public function getTag(): ?string
+    {
+        return $this->tag;
+    }
+
+    /**
+     * @param string $name
+     * @return bool true if the attribute is set, also when it has no value
+     */
+    public function hasAttribute(string $name): bool
+    {
+        return array_key_exists($name, $this->attributes);
+    }
+
+    /**
+     * @param string $name
+     * @return mixed the value as it was set, null if the attribute has no value or is not set (see hasAttribute())
+     */
+    public function getAttribute(string $name): mixed
+    {
+        return $this->attributes[$name] ?? null;
+    }
+
+    /**
+     * @return array<string, mixed> all attributes as they were set (without styles from setStyle())
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param string $className
+     * @return bool
+     */
+    public function hasClass(string $className): bool
+    {
+        return in_array($className, $this->getClasses(), true);
+    }
+
+    /**
+     * Add the class if it is missing, remove it if it is present.
+     * With $force, true always adds and false always removes the class.
+     * @param string $className
+     * @param bool|null $force
+     * @return Element
+     */
+    public function toggleClass(string $className, ?bool $force = null): self
+    {
+        $add = $force ?? !$this->hasClass($className);
+
+        return $add ? $this->addClass($className) : $this->removeClass($className);
+    }
+
+    /**
+     * Set several inline styles, see setStyle()
+     * @param array<string, mixed>|null $styles
+     * @return Element
+     */
+    public function setStyles(?array $styles = []): self
+    {
+        foreach ($styles ?? [] as $name => $value) {
+            $this->setStyle((string)$name, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return mixed the value set with setStyle(), null if not set
+     */
+    public function getStyle(string $name): mixed
+    {
+        return $this->style[$name] ?? null;
+    }
+
+    /**
+     * @return array<string, mixed> styles set with setStyle() (a 'style' attribute is returned by getAttribute('style'))
+     */
+    public function getStyles(): array
+    {
+        return $this->style;
+    }
+
+    /**
+     * @return list<mixed> child content in order, as it was added (an array added with add() is one entry)
+     */
+    public function getChildren(): array
+    {
+        return $this->content;
+    }
+
+    /**
+     * Add child content at the beginning, rendered as raw HTML, see add()
+     * @param mixed $content
+     * @return Element
+     */
+    public function prepend(mixed $content = null): self
+    {
+        if (!is_null($content)) {
+            array_unshift($this->content, $content);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove all child content
+     * @return Element
+     */
+    public function clearChildren(): self
+    {
+        $this->content = [];
+
+        return $this;
+    }
 }

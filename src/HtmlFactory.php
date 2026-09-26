@@ -209,6 +209,14 @@ class HtmlFactory
     }
 
     /**
+     * HTML comment <!-- text -->. '--' in the text is split to '- -', so the comment can't be closed early.
+     */
+    public static function comment(string $text): Element
+    {
+        return self::empty('<!-- ' . preg_replace('/-(?=-)/', '- ', $text) . ' -->');
+    }
+
+    /**
      * <col> element
      * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
      * @param mixed $children see Element::add()
@@ -256,6 +264,14 @@ class HtmlFactory
     public static function dd(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    /**
+     * <!DOCTYPE html>, e.g. HtmlFactory::empty([HtmlFactory::doctype(), HtmlFactory::html([], ...)])
+     */
+    public static function doctype(): Element
+    {
+        return self::empty('<!DOCTYPE html>');
     }
 
     /**
@@ -648,6 +664,16 @@ class HtmlFactory
     }
 
     /**
+     * <math> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function math(?array $attributes = [], mixed $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    /**
      * <menu> element
      * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
      * @param mixed $children see Element::add()
@@ -883,6 +909,16 @@ class HtmlFactory
      * @param mixed $children see Element::add()
      */
     public static function select(?array $attributes = [], mixed $children = null): Element
+    {
+        return self::element(__FUNCTION__, $attributes, $children);
+    }
+
+    /**
+     * <selectedcontent> element
+     * @param array<array-key, mixed>|null $attributes see Element::setAttributes()
+     * @param mixed $children see Element::add()
+     */
+    public static function selectedcontent(?array $attributes = [], mixed $children = null): Element
     {
         return self::element(__FUNCTION__, $attributes, $children);
     }
