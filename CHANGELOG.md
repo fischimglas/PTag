@@ -8,6 +8,10 @@ The public API is unchanged (only additions), but the generated HTML differs in 
 - `Element::addText()` and `HtmlFactory::text()` for escaped text content
 - `HtmlFactory` tags: `b`, `base`, `br`, `caption`, `datalist`, `dd`, `fieldset`, `hr`, `kbd`, `output`, `q`,
   `rp`, `rt`, `ruby`, `s`, `samp`, `script`, `tfoot`, `wbr`
+- `Element` getters: `getTag()`, `hasAttribute()`, `getAttribute()`, `getAttributes()`, `getStyle()`,
+  `getStyles()`, `getChildren()`
+- `Element::hasClass()`, `toggleClass($name, ?bool $force)`, `setStyles()`, `prepend()`, `clearChildren()`
+- `HtmlFactory::doctype()`, `HtmlFactory::comment()`, `math`, `selectedcontent`
 - `ElementCf::MODE_XHTML` (same value as `MODE_XHML`, which is now deprecated)
 - List entries in attribute arrays are attributes without value: `['required', 'type' => 'text']`
 

@@ -75,6 +75,43 @@ echo HtmlFactory::div()
 Result:
 `<div><img src="image.png" /></div>`
 
+### Reading and editing elements
+
+```php
+use PTag\HtmlFactory;
+
+$el = HtmlFactory::div(['id' => 'box', 'class' => 'a b', 'hidden'], 'content');
+
+$el->getTag();                 // 'div'
+$el->hasAttribute('hidden');   // true (also for attributes without value)
+$el->getAttribute('id');       // 'box'
+$el->getAttributes();          // ['id' => 'box', 'class' => 'a b', 'hidden' => null]
+$el->hasClass('a b');          // true, all given classes are set
+$el->toggleClass('b c');       // class="a c"
+$el->toggleClass('a', false);  // always removes (true always adds)
+
+$el->setStyles(['margin' => 0, 'color' => 'red']);
+$el->getStyle('margin');       // 0
+$el->getStyles();              // ['margin' => 0, 'color' => 'red']
+
+$el->prepend('first ');        // add at the beginning
+$el->getChildren();            // ['first ', 'content']
+$el->clearChildren();          // remove all children
+```
+
+### Documents and comments
+
+```php
+echo HtmlFactory::empty([
+    HtmlFactory::doctype(),
+    HtmlFactory::comment('generated'),
+    HtmlFactory::html(['lang' => 'en'], HtmlFactory::body([], 'Hello')),
+]);
+```
+
+Result:
+`<!DOCTYPE html><!-- generated --><html lang="en"><body>Hello</body></html>`
+
 ### CSS classes
 
 `addClass(...)` adds to the existing classes, `setAttribute('class', ...)` replaces them. Duplicates are removed

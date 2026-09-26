@@ -573,4 +573,73 @@ class ElementTest extends TestCase
         self::assertEquals('<!-- a - -> <script> - - - -->', HtmlFactory::comment('a --> <script> ---')->serialize());
         self::assertEquals('<div><!-- x --></div>', HtmlFactory::div([], HtmlFactory::comment('x'))->serialize());
     }
+
+    public function testClassHelpersWithSeveralNames()
+    {
+        $e = new Element('div', ['class' => 'a b']);
+
+        self::assertTrue($e->hasClass('a b'));
+        self::assertTrue($e->hasClass(' b  a '));
+        self::assertFalse($e->hasClass('a c'));
+        self::assertFalse($e->hasClass('  '));
+
+        $e->toggleClass('a c');
+        self::assertEquals('<div class="b c"></div>', $e->serialize());
+        $e->toggleClass(' b ');
+        self::assertEquals('<div class="c"></div>', $e->serialize());
+        $e->toggleClass('x y', true);
+        self::assertEquals('<div class="c x y"></div>', $e->serialize());
+        $e->toggleClass('c x y', false);
+        self::assertEquals('<div></div>', $e->serialize());
+        $e->toggleClass('', true)->toggleClass('');
+        self::assertEquals('<div></div>', $e->serialize());
+    }
+
+    public function testSetStylesIgnoresListEntries()
+    {
+        $e = (new Element('div'))->setStyles(['color:red', 'margin' => '0']);
+
+        self::assertSame(['margin' => '0'], $e->getStyles());
+        self::assertEquals('<div style="margin:0"></div>', $e->serialize());
+    }
+
+    public function testGetAttributeClassIsNormalized()
+    {
+        $e = new Element('div', ['class' => ['x', ['y', 'x']]]);
+        self::assertSame('x y', $e->getAttribute('class'));
+
+        $e->addClass('z');
+        self::assertSame('x y z', $e->getAttribute('class'));
+
+        $e->setAttribute('class', true);
+        self::assertFalse($e->hasAttribute('class'));
+        self::assertNull($e->getAttribute('class'));
+    }
+
+    public function testPrependArrayAndCloneWithNewMethods()
+    {
+        $e = new Element('div', [], 'b');
+        $e->prepend(['x', new Element('i')]);
+        self::assertEquals('<div>x<i></i>b</div>', $e->serialize());
+
+        $copy = $e->clone()->toggleClass('a')->setStyles(['color' => 'red'])->clearChildren()->prepend('c');
+        self::assertEquals('<div>x<i></i>b</div>', $e->serialize());
+        self::assertEquals('<div class="a" style="color:red">c</div>', $copy->serialize());
+    }
+
+    public function testCommentEdgeCases()
+    {
+        self::assertEquals('<!-- a - -!> b -->', HtmlFactory::comment('a --!> b')->serialize());
+        self::assertEquals('<!-- <!- - -->', HtmlFactory::comment('<!--')->serialize());
+        self::assertEquals('<!-- -> x- -->', HtmlFactory::comment('-> x-')->serialize());
+        self::assertEquals('<!--  -->', HtmlFactory::comment('')->serialize());
+    }
+
+    public function testDoctypeAndCommentInXhtmlMode()
+    {
+        ElementCf::setMode(ElementCf::MODE_XHTML);
+
+        self::assertEquals('<!DOCTYPE html>', HtmlFactory::doctype()->serialize());
+        self::assertEquals('<!-- a - - b -->', HtmlFactory::comment('a -- b')->serialize());
+    }
 }

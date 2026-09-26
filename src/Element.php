@@ -558,7 +558,8 @@ class Element implements SerializeableInterface
 
     /**
      * @param string $name
-     * @return mixed the value as it was set, null if the attribute has no value or is not set (see hasAttribute())
+     * @return mixed the value as it was set, null if the attribute has no value or is not set (see hasAttribute()).
+     *               'class' is returned as a space separated string of unique class names.
      */
     public function getAttribute(string $name): mixed
     {
@@ -566,7 +567,8 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @return array<string, mixed> all attributes as they were set (without styles from setStyle())
+     * @return array<string, mixed> all attributes as they were set, 'class' as a space separated string
+     *                              (styles from setStyle() are returned by getStyles())
      */
     public function getAttributes(): array
     {
@@ -574,37 +576,56 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * @param string $className
-     * @return bool
+     * @param string $className one class or several separated by spaces
+     * @return bool true if all given classes are set, false for an empty name
      */
     public function hasClass(string $className): bool
     {
-        return in_array($className, $this->getClasses(), true);
+        $classes = $this->splitClassNames($className);
+
+        return $classes !== [] && array_diff($classes, $this->getClasses()) === [];
     }
 
     /**
-     * Add the class if it is missing, remove it if it is present.
-     * With $force, true always adds and false always removes the class.
+     * @param string $className
+     * @return list<string>
+     */
+    private function splitClassNames(string $className): array
+    {
+        return array_values(array_filter(explode(' ', $className), fn($it) => $it !== ''));
+    }
+
+    /**
+     * Add each class if it is missing, remove it if it is present (several classes separated by spaces
+     * are toggled one by one). With $force, true always adds and false always removes the classes.
      * @param string $className
      * @param bool|null $force
      * @return Element
      */
     public function toggleClass(string $className, ?bool $force = null): self
     {
-        $add = $force ?? !$this->hasClass($className);
+        foreach ($this->splitClassNames($className) as $class) {
+            if ($force ?? !$this->hasClass($class)) {
+                $this->addClass($class);
+            } else {
+                $this->removeClass($class);
+            }
+        }
 
-        return $add ? $this->addClass($className) : $this->removeClass($className);
+        return $this;
     }
 
     /**
-     * Set several inline styles, see setStyle()
-     * @param array<string, mixed>|null $styles
+     * Set several inline styles, see setStyle(). Entries without a string key are ignored.
+     * @param array<array-key, mixed>|null $styles
      * @return Element
      */
     public function setStyles(?array $styles = []): self
     {
         foreach ($styles ?? [] as $name => $value) {
-            $this->setStyle((string)$name, $value);
+            if (is_string($name)) {
+                $this->setStyle($name, $value);
+            }
         }
 
         return $this;
