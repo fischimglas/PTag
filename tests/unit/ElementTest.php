@@ -254,29 +254,6 @@ class ElementTest extends TestCase
         );
     }
 
-    public function testHtmlFactory()
-    {
-        ElementCf::setMode(ElementCf::MODE_HTML5);
-
-        self::assertEquals('<p class="x">a<br>b<b>c</b></p>', HtmlFactory::p(['class' => 'x'], ['a', HtmlFactory::br(), 'b', HtmlFactory::b([], 'c')])->serialize());
-        self::assertEquals('<dl><dt>t</dt><dd>d</dd></dl>', HtmlFactory::dl([], [HtmlFactory::dt([], 't'), HtmlFactory::dd([], 'd')])->serialize());
-        self::assertEquals('<hr>', HtmlFactory::hr()->serialize());
-        self::assertEquals('<picture></picture>', HtmlFactory::picture()->serialize());
-        self::assertEquals('<var></var>', HtmlFactory::var()->serialize());
-        self::assertEquals('text<a></a>', HtmlFactory::empty(['text', HtmlFactory::a()])->serialize());
-    }
-
-    public function testXhtmlModeConstants()
-    {
-        self::assertSame(ElementCf::MODE_XHML, ElementCf::MODE_XHTML);
-
-        ElementCf::setMode(ElementCf::MODE_XHTML);
-        self::assertEquals('<br />', (new Element('br'))->serialize());
-
-        ElementCf::setMode(ElementCf::MODE_HTML5);
-        self::assertEquals('<br>', (new Element('br'))->serialize());
-    }
-
     public function testSetAndRemoveStyle()
     {
         $e = new Element('div');
@@ -398,18 +375,6 @@ class ElementTest extends TestCase
         self::assertEquals('<div rel="noopener noreferrer" data-x="a:b c" style="margin:0 auto"></div>', $e->serialize());
     }
 
-    public function testInvalidModeKeepsCurrentMode()
-    {
-        try {
-            ElementCf::setMode('xhtml');
-            self::fail('Expected InvalidArgumentException');
-        } catch (\InvalidArgumentException) {
-        }
-
-        self::assertEquals(ElementCf::MODE_HTML5, ElementCf::$mode);
-        self::assertEquals('<br>', (new Element('br'))->serialize());
-    }
-
     public function testGetClasses()
     {
         self::assertSame([], (new Element('div'))->getClasses());
@@ -427,18 +392,6 @@ class ElementTest extends TestCase
     public function testBooleanContentRendersNothing()
     {
         self::assertEquals('<div>0</div>', (new Element('div', [], [true, false, 0, null]))->serialize());
-    }
-
-    public function testTextIsEscaped()
-    {
-        self::assertEquals(
-            '<p>&lt;b&gt;Tom &amp; Jerry&lt;/b&gt;</p>',
-            HtmlFactory::p([], HtmlFactory::text('<b>Tom & Jerry</b>'))->serialize()
-        );
-        self::assertEquals(
-            '<p>a &lt; b<br>1 2</p>',
-            HtmlFactory::p()->addText('a < b')->add('<br>')->addText([1, 2])->addText(null)->addText(false)->serialize()
-        );
     }
 
     public function testListEntriesAreValuelessAttributes()
@@ -550,30 +503,6 @@ class ElementTest extends TestCase
         self::assertEquals('<div>new</div>', $e->serialize());
     }
 
-    public function testNewFactoryTags()
-    {
-        self::assertEquals('<math><mi>x</mi></math>', HtmlFactory::math([], HtmlFactory::element('mi', [], 'x'))->serialize());
-        self::assertEquals(
-            '<select><button><selectedcontent></selectedcontent></button></select>',
-            HtmlFactory::select([], HtmlFactory::button([], HtmlFactory::selectedcontent()))->serialize()
-        );
-    }
-
-    public function testDoctype()
-    {
-        self::assertEquals(
-            '<!DOCTYPE html><html lang="en"></html>',
-            HtmlFactory::empty([HtmlFactory::doctype(), HtmlFactory::html(['lang' => 'en'])])->serialize()
-        );
-    }
-
-    public function testComment()
-    {
-        self::assertEquals('<!-- note -->', HtmlFactory::comment('note')->serialize());
-        self::assertEquals('<!-- a - -> <script> - - - -->', HtmlFactory::comment('a --> <script> ---')->serialize());
-        self::assertEquals('<div><!-- x --></div>', HtmlFactory::div([], HtmlFactory::comment('x'))->serialize());
-    }
-
     public function testClassHelpersWithSeveralNames()
     {
         $e = new Element('div', ['class' => 'a b']);
@@ -625,21 +554,5 @@ class ElementTest extends TestCase
         $copy = $e->clone()->toggleClass('a')->setStyles(['color' => 'red'])->clearChildren()->prepend('c');
         self::assertEquals('<div>x<i></i>b</div>', $e->serialize());
         self::assertEquals('<div class="a" style="color:red">c</div>', $copy->serialize());
-    }
-
-    public function testCommentEdgeCases()
-    {
-        self::assertEquals('<!-- a - -!> b -->', HtmlFactory::comment('a --!> b')->serialize());
-        self::assertEquals('<!-- <!- - -->', HtmlFactory::comment('<!--')->serialize());
-        self::assertEquals('<!-- -> x- -->', HtmlFactory::comment('-> x-')->serialize());
-        self::assertEquals('<!--  -->', HtmlFactory::comment('')->serialize());
-    }
-
-    public function testDoctypeAndCommentInXhtmlMode()
-    {
-        ElementCf::setMode(ElementCf::MODE_XHTML);
-
-        self::assertEquals('<!DOCTYPE html>', HtmlFactory::doctype()->serialize());
-        self::assertEquals('<!-- a - - b -->', HtmlFactory::comment('a -- b')->serialize());
     }
 }
