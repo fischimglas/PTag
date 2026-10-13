@@ -442,10 +442,10 @@ class ElementTest extends TestCase
         self::assertTrue($e->hasAttribute('data-x'));
         self::assertFalse($e->hasAttribute('name'));
         self::assertSame('text', $e->getAttribute('type'));
-        self::assertNull($e->getAttribute('required'));
+        self::assertTrue($e->getAttribute('required'));
         self::assertFalse($e->getAttribute('data-x'));
         self::assertNull($e->getAttribute('name'));
-        self::assertSame(['type' => 'text', 'required' => null, 'data-x' => false], $e->getAttributes());
+        self::assertSame(['type' => 'text', 'required' => true, 'data-x' => false], $e->getAttributes());
 
         $e->removeAttribute('required');
         self::assertFalse($e->hasAttribute('required'));
@@ -554,5 +554,92 @@ class ElementTest extends TestCase
         $copy = $e->clone()->toggleClass('a')->setStyles(['color' => 'red'])->clearChildren()->prepend('c');
         self::assertEquals('<div>x<i></i>b</div>', $e->serialize());
         self::assertEquals('<div class="a" style="color:red">c</div>', $copy->serialize());
+    }
+
+    public function testStyleAttributeWithQuotesAndLists()
+    {
+        self::assertEquals('<div style="font-family:&quot;Arial&quot;"></div>', (new Element('div', ['style' => 'font-family:"Arial";']))->serialize());
+        self::assertEquals(
+            '<div style="content:&#039;x&#039;;color:red"></div>',
+            (new Element('div', ['style' => "content:'x'"]))->setStyle('color', 'red')->serialize()
+        );
+        self::assertEquals('<div style="color:red;margin:0"></div>', (new Element('div', ['style' => ['color:red;', 'margin:0', '']]))->serialize());
+        self::assertEquals('<div style="0"></div>', (new Element('div', ['style' => '0']))->serialize());
+    }
+
+    public function testListEntriesInXhtmlMode()
+    {
+        ElementCf::setMode(ElementCf::MODE_XHTML);
+
+        self::assertEquals('<input required="required" type="text" />', (new Element('input', ['required', 'type' => 'text']))->serialize());
+        self::assertEquals('<img alt="" />', (new Element('img', ['alt' => null]))->serialize());
+    }
+
+    public function testClassAndStyleNamesAreCaseInsensitive()
+    {
+        self::assertEquals('<div class="a b"></div>', (new Element('div', ['CLASS' => 'a']))->addClass('b')->serialize());
+        self::assertEquals('<div style="color:red;margin:0"></div>', (new Element('div', ['STYLE' => 'color:red']))->setStyle('margin', '0')->serialize());
+        self::assertEquals('<div Data-X="true"></div>', (new Element('div', ['Data-X' => true]))->serialize());
+
+        $e = new Element('div', ['Class' => 'a']);
+        self::assertTrue($e->hasAttribute('CLASS'));
+        self::assertSame('a', $e->getAttribute('class'));
+        self::assertEquals('<div></div>', $e->removeAttribute('CLASS')->serialize());
+
+        self::assertEquals('<svg viewBox="0 0 1 1"></svg>', (new Element('svg', ['viewBox' => '0 0 1 1']))->serialize());
+    }
+
+    public function testClassNamesSplitOnAnyWhitespace()
+    {
+        $e = new Element('div', ['class' => "a\tb\nc"]);
+
+        self::assertSame(['a', 'b', 'c'], $e->getClasses());
+        self::assertEquals('<div class="b c"></div>', $e->removeClass("a")->serialize());
+        self::assertTrue($e->addClass("d\ne")->hasClass('e'));
+        self::assertTrue($e->hasClass("b\tc"));
+    }
+
+    public function testClassKeepsItsPosition()
+    {
+        $e = new Element('div', ['id' => 'x', 'class' => 'a', 'title' => 't']);
+        $e->addClass('b');
+
+        self::assertEquals('<div id="x" class="a b" title="t"></div>', $e->serialize());
+    }
+
+    public function testArrayValuesSkipEmptyEntries()
+    {
+        self::assertEquals('<a rel="a b"></a>', (new Element('a', ['rel' => ['a', null, '', true, 'b']]))->serialize());
+        self::assertEquals('<div style="margin:0"></div>', (new Element('div'))->setStyle('margin', [0, null])->serialize());
+    }
+
+    public function testBooleansAreIgnoredAsContentAndStyle()
+    {
+        $e = (new Element('div'))->add(false)->add(true)->prepend(false)->addText([true, 'x', false]);
+
+        self::assertSame(['x'], $e->getChildren());
+        self::assertEquals('<div>x</div>', $e->serialize());
+        self::assertEquals('<div></div>', (new Element('div'))->setStyle('x', true)->setStyle('y', false)->serialize());
+    }
+
+    public function testAttributeNamedZero()
+    {
+        self::assertEquals('<div 0></div>', (new Element('div'))->setAttribute('0')->serialize());
+    }
+
+    public function testCloneCopiesElementsInAttributeAndStyleValues()
+    {
+        $inner = new Element('b');
+        $original = new Element('div', ['data-tpl' => $inner]);
+        $original->setStyle('x', $inner);
+        $copy = $original->clone();
+        $inner->addClass('changed');
+
+        self::assertEquals('<div data-tpl="&lt;b&gt;&lt;/b&gt;" style="x:&lt;b&gt;&lt;/b&gt;"></div>', $copy->serialize());
+    }
+
+    public function testSanitizedDuplicateNamesRenderOnce()
+    {
+        self::assertEquals('<div onclick="b"></div>', (new Element('div', ['on click' => 'a', 'onclick' => 'b']))->serialize());
     }
 }

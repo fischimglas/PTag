@@ -47,8 +47,8 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * Set several attributes. List entries without key are attributes without value:
-     * ['required', 'type' => 'text'] renders required type="text"
+     * Set several attributes. List entries without key are boolean attributes (same as true):
+     * ['required', 'type' => 'text'] renders required type="text" (required="required" in XHTML mode)
      * @param array<array-key, mixed>|null $attributes
      * @return Element
      */
@@ -58,7 +58,7 @@ class Element implements SerializeableInterface
             foreach ($attributes as $key => $value) {
                 if (is_int($key)) {
                     if (is_string($value) && $value !== '') {
-                        $this->setAttribute($value);
+                        $this->setAttribute($value, true);
                     }
                     continue;
                 }
@@ -71,13 +71,14 @@ class Element implements SerializeableInterface
 
     /**
      * Add child content, rendered as raw HTML (use addText() for escaped text).
-     * Accepts elements, strings, numbers, Stringable objects and (nested) arrays of those; null is ignored.
+     * Accepts elements, strings, numbers, Stringable objects and (nested) arrays of those; null and booleans are
+     * ignored, so $condition && $element can be passed directly.
      * @param mixed $content
      * @return Element
      */
     public function add(mixed $content = null): self
     {
-        if (!is_null($content)) {
+        if (!is_null($content) && !is_bool($content)) {
             $this->content[] = $content;
         }
 
@@ -110,16 +111,31 @@ class Element implements SerializeableInterface
      */
     public function setAttribute(string $name, mixed $value = null): self
     {
+        $name = $this->normalizeAttributeName($name);
         if ($name === 'class') {
-            unset($this->attributes['class']);
+            $this->attributes['class'] = '';
             $value = $this->mergeCssClasses($value);
             if ($value === '') {
+                unset($this->attributes['class']);
+
                 return $this;
             }
         }
         $this->attributes[$name] = $value;
 
         return $this;
+    }
+
+    /**
+     * 'class' and 'style' are matched case-insensitively (other names keep their case, e.g. SVG viewBox)
+     * @param string $name
+     * @return string
+     */
+    private function normalizeAttributeName(string $name): string
+    {
+        $lower = strtolower($name);
+
+        return $lower === 'class' || $lower === 'style' ? $lower : $name;
     }
 
     /**
@@ -133,7 +149,7 @@ class Element implements SerializeableInterface
         if (is_array($cssClasses)) {
             $newClasses = $this->flattenNestedArray($cssClasses);
         } elseif ($this->isClassName($cssClasses)) {
-            $newClasses = explode(' ', (string)$cssClasses);
+            $newClasses = $this->splitClassNames((string)$cssClasses);
         }
 
         $classes = array_filter(array_merge($this->getClasses(), $newClasses), fn($it) => $it !== '');
@@ -162,7 +178,7 @@ class Element implements SerializeableInterface
             if (is_array($value)) {
                 $result[] = $this->flattenNestedArray($value);
             } elseif ($this->isClassName($value)) {
-                $result[] = explode(' ', (string)$value);
+                $result[] = $this->splitClassNames((string)$value);
             }
         }
 
@@ -174,7 +190,7 @@ class Element implements SerializeableInterface
      */
     public function getClasses(): array
     {
-        return array_values(array_filter(explode(' ', $this->stringify($this->attributes['class'] ?? '')), fn($it) => $it !== ''));
+        return $this->splitClassNames($this->stringify($this->attributes['class'] ?? ''));
     }
 
     public function __toString(): string
@@ -202,10 +218,10 @@ class Element implements SerializeableInterface
         }
 
         $tag[] = '<' . $this->tag;
-        if ($serializedAttributes) {
+        if ($serializedAttributes !== '') {
             $tag[] = ' ' . $serializedAttributes;
         }
-        if ($serializedStyle) {
+        if ($serializedStyle !== '') {
             $tag[] = ' style="' . $serializedStyle . '"';
         }
 
@@ -229,11 +245,16 @@ class Element implements SerializeableInterface
      */
     private function serializeStyleAttribute(mixed $value): string
     {
-        if (is_array($value)) {
+        if (is_array($value) && array_is_list($value)) {
+            return implode(';', array_filter(
+                array_map(fn($it) => $this->serializeStyleAttribute($it), $value),
+                fn($it) => $it !== ''
+            ));
+        } elseif (is_array($value)) {
             return $this->serializeStyle($value);
         }
 
-        return rtrim(trim($this->escape(is_bool($value) ? '' : $this->stringify($value))), ';');
+        return $this->escape(rtrim(trim(is_bool($value) ? '' : $this->stringify($value)), "; \t\n\r"));
     }
 
     /**
@@ -257,6 +278,8 @@ class Element implements SerializeableInterface
         if ($value instanceof SerializeableInterface) {
             return $value->serialize();
         } elseif (is_array($value)) {
+            $value = array_filter($value, fn($it) => $it !== null && $it !== '' && !is_bool($it));
+
             return implode(' ', array_map(fn($it) => $this->stringify($it), $value));
         } elseif (is_bool($value)) {
             return $value ? 'true' : 'false';
@@ -307,7 +330,8 @@ class Element implements SerializeableInterface
                 $value = $this->stringify($value);
             }
 
-            $result[] = $value === null && ElementCf::$attributeMinimization ? $key : $key . '="' . $this->escape($value ?? '') . '"';
+            // keyed by the sanitized name, so names that only differed in removed characters render once
+            $result[$key] = $value === null && ElementCf::$attributeMinimization ? $key : $key . '="' . $this->escape($value ?? '') . '"';
         }
 
         return implode(' ', $result);
@@ -340,6 +364,8 @@ class Element implements SerializeableInterface
      */
     private function isStringAttribute(string $name): bool
     {
+        $name = strtolower($name);
+
         return str_starts_with($name, 'aria-') || str_starts_with($name, 'data-');
     }
 
@@ -350,7 +376,7 @@ class Element implements SerializeableInterface
     private function serializeStyle(array $styles): string
     {
         $result = [];
-        $styles = array_filter($styles, fn($value) => $value !== null && $value !== '' && $value !== false);
+        $styles = array_filter($styles, fn($value) => $value !== null && $value !== '' && !is_bool($value));
         foreach ($styles as $key => $value) {
             $key = $this->sanitizeStyleName((string)$key);
             if ($key === '') {
@@ -417,11 +443,14 @@ class Element implements SerializeableInterface
     }
 
     /**
-     * Deep clone: child elements are cloned as well, so the copy can be modified independently
+     * Deep clone: child elements (also those used as attribute or style values) are cloned as well,
+     * so the copy can be modified independently
      */
     public function __clone(): void
     {
         $this->content = array_map(fn($it) => $this->cloneContent($it), $this->content);
+        $this->attributes = array_map(fn($it) => $this->cloneContent($it), $this->attributes);
+        $this->style = array_map(fn($it) => $this->cloneContent($it), $this->style);
     }
 
     /**
@@ -446,7 +475,7 @@ class Element implements SerializeableInterface
     public function removeClass(null|string|array $className = null): self
     {
         if (is_string($className)) {
-            $className = explode(' ', $className);
+            $className = $this->splitClassNames($className);
         }
 
         if (is_array($className)) {
@@ -474,8 +503,8 @@ class Element implements SerializeableInterface
      */
     public function removeAttribute(?string $name = null): self
     {
-        if (!is_null($name) && array_key_exists($name, $this->attributes)) {
-            unset($this->attributes[$name]);
+        if (!is_null($name)) {
+            unset($this->attributes[$this->normalizeAttributeName($name)]);
         }
 
         return $this;
@@ -553,7 +582,7 @@ class Element implements SerializeableInterface
      */
     public function hasAttribute(string $name): bool
     {
-        return array_key_exists($name, $this->attributes);
+        return array_key_exists($this->normalizeAttributeName($name), $this->attributes);
     }
 
     /**
@@ -563,7 +592,7 @@ class Element implements SerializeableInterface
      */
     public function getAttribute(string $name): mixed
     {
-        return $this->attributes[$name] ?? null;
+        return $this->attributes[$this->normalizeAttributeName($name)] ?? null;
     }
 
     /**
@@ -592,7 +621,7 @@ class Element implements SerializeableInterface
      */
     private function splitClassNames(string $className): array
     {
-        return array_values(array_filter(explode(' ', $className), fn($it) => $it !== ''));
+        return preg_split('/\s+/', $className, -1, PREG_SPLIT_NO_EMPTY) ?: [];
     }
 
     /**
@@ -663,7 +692,7 @@ class Element implements SerializeableInterface
      */
     public function prepend(mixed $content = null): self
     {
-        if (!is_null($content)) {
+        if (!is_null($content) && !is_bool($content)) {
             array_unshift($this->content, $content);
         }
 

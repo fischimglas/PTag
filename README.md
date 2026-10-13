@@ -85,7 +85,7 @@ $el = HtmlFactory::div(['id' => 'box', 'class' => 'a b', 'hidden'], 'content');
 $el->getTag();                 // 'div'
 $el->hasAttribute('hidden');   // true (also for attributes without value)
 $el->getAttribute('id');       // 'box'
-$el->getAttributes();          // ['id' => 'box', 'class' => 'a b', 'hidden' => null]
+$el->getAttributes();          // ['id' => 'box', 'class' => 'a b', 'hidden' => true]
 $el->hasClass('a b');          // true, all given classes are set
 $el->toggleClass('b c');       // class="a c"
 $el->toggleClass('a', false);  // always removes (true always adds)
@@ -124,7 +124,7 @@ echo HtmlFactory::div(['class' => 'a'])->setAttribute('class', 'b'); // <div cla
 
 ### Escaping
 
-- Attribute values and style values are escaped with `htmlentities()`.
+- Attribute values and style values are escaped with `htmlspecialchars()` (only `& < > " '`, other characters stay as they are).
 - Attribute names and style property names are sanitized (invalid characters are removed).
 - **Child content passed to the factory or `add()` is not escaped.** Strings are output as raw HTML.
   Use `HtmlFactory::text()` or `addText()` for user input:
